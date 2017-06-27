@@ -30,18 +30,11 @@ if sys.argv[1] == "switch":
 elif sys.argv[1] == "clear":
     if len(sys.argv) == 2:
         for clipboard in os.listdir(clipboards_location):
-            if os.path.isfile(clipboards_location + clipboard + ".bmp"):
-                os.remove(clipboards_location + clipboard + ".bmp")
-            elif os.path.isfile(clipboards_location + clipboard + ".txt"):
-                os.remove(clipboards_location + clipboard + ".txt")
+            clipboard_assist.clear(clipboards_location, clipboard)
     elif len(sys.argv) == 3:
         clipboard = clipboard_assist.cleanString(sys.argv[2])
-        if os.path.isfile(clipboards_location + clipboard + ".bmp"):
-            os.remove(clipboards_location + clipboard + ".bmp")
-        elif os.path.isfile(clipboards_location + clipboard + ".txt"):
-            os.remove(clipboards_location + clipboard + ".txt")
-        else:
-            print ("Clipboard " + sys.argv[2] + " does not exist")
+        if not clipboard_assist.clear(clipboards_location, clipboard):
+            print ("Clipboard " + clipboard + " does not exist")
     else:
         print ("Usage: python clipboards.py clear [clipboard]")
 
@@ -49,17 +42,8 @@ elif sys.argv[1] == "view":
     if len(sys.argv) == 2:
         clipboard_assist.view()
     elif len(sys.argv) == 3:
-        if os.path.isfile(clipboards_location + sys.argv[2] + ".bmp"):
-            image = Image.open(clipboards_location + sys.argv[2] + ".bmp")
-            image.show()
-            print ("Image displayed")
-        elif os.path.isfile(clipboards_location + sys.argv[2] + ".txt"):
-            print ("Clipboard text:")
-            f = open(clipboards_location + sys.argv[2] + ".txt", 'r')
-            print (f.read())
-            f.close()
-        else:
-            print ("Clipboard " + sys.argv[2] + " does not exist")
+        if not clipboard_assist.view_single(clipboards_location, sys.argv[2]):
+            print ("Clipboard " + clipboard + " does not exist")
     else:
         print ("Usage: python clipboards.py view [clipboard]")
 

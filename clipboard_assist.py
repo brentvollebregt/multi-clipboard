@@ -62,11 +62,29 @@ def loadClipboard(clipboards_location, clipboard):
         win32clipboard.SetClipboardText(clipboard_data)
         win32clipboard.CloseClipboard()
 
-def clear():
-    pass
+def clear(clipboards_location, clipboard):
+    extension = bmpOrTxt(clipboards_location + clipboard)
+    if extension:
+        os.remove(clipboards_location + clipboard + extension)
+        return True
+    else:
+        return False
 
-def view(clipboard):
-    pass
+def view_single(clipboards_location, clipboard):
+    extension = bmpOrTxt(clipboards_location + clipboard)
+    if extension == '.bmp':
+        image = Image.open(clipboards_location + sys.argv[2] + ".bmp")
+        image.show()
+        print ("Image displayed")
+        return True
+    elif extension == '.txt':
+        print ("Clipboard text:")
+        f = open(clipboards_location + sys.argv[2] + ".txt", 'r')
+        print (f.read())
+        f.close()
+        return True
+    else:
+        return False
 
 def view():
     app = QtWidgets.QApplication(sys.argv)
@@ -89,6 +107,14 @@ def cleanString(string):
     keepcharacters = ('.', '_', '[', ']', '(', ')')
     string = "".join(c for c in string if c.isalnum() or c in keepcharacters).rstrip()
     return string
+
+def bmpOrTxt(base):
+    if os.path.isfile(base + ".bmp"):
+        return '.bmp'
+    elif os.path.isfile(base + ".txt"):
+        return '.txt'
+    else:
+        return False
 
 class GUIObject(GUI.Ui_MainWindow):
     def __init__(self, MainWindow):
@@ -117,7 +143,6 @@ class GUIObject(GUI.Ui_MainWindow):
         self.label_6.setPixmap(icon)
 
     def closeButton(self):
-        print ("Close")
         self.MW.close()
 
     def deleteButton(self):
