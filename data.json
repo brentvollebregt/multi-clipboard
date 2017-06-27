@@ -1,1 +1,5 @@
-{"current_clipboard": 1}
+{
+    "close_on_gui_select": true,
+    "current_clipboard": "2",
+    "logging": false
+}
