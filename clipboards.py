@@ -2,7 +2,6 @@ import clipboard_assist
 import logging
 import sys
 import os
-from PIL import Image
 
 clipboards_location = os.getcwd() + "/clipboards/"
 data = clipboard_assist.getData()
@@ -31,6 +30,8 @@ elif sys.argv[1] == "clear":
     if len(sys.argv) == 2:
         for clipboard in os.listdir(clipboards_location):
             clipboard_assist.clear(clipboards_location, clipboard)
+        data["current_clipboard"] = '1'
+        clipboard_assist.setData(data)
     elif len(sys.argv) == 3:
         clipboard = clipboard_assist.cleanString(sys.argv[2])
         if not clipboard_assist.clear(clipboards_location, clipboard):
@@ -43,7 +44,7 @@ elif sys.argv[1] == "view":
         clipboard_assist.view()
     elif len(sys.argv) == 3:
         if not clipboard_assist.view_single(clipboards_location, sys.argv[2]):
-            print ("Clipboard " + clipboard + " does not exist")
+            print ("Clipboard " + sys.argv[2] + " does not exist")
     else:
         print ("Usage: python clipboards.py view [clipboard]")
 
