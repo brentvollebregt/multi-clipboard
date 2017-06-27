@@ -8,9 +8,9 @@ Images and text are supported and unlimited amounts of saved clipboards can be c
 ## What This Does
 This acts as a hotbar in a game would. When 1 is passed and you are currently using 2 (current is saved in data.json), your clipboard contents will be saved in 2 and 1 will then be loaded; if 1 hasn't been used before, the current clipboard is kept but the data is still saved to 2.
 
-e.g.	
-1: 123, 2: abc, clipboard: myclipboard
-When currently using is 1 and you pass 2:
+e.g.<br />
+1: 123, 2: abc, clipboard: myclipboard<br />
+When currently using is 1 and you pass 2:<br />
 1: myclipboard, 2: abc, clipboard: abc
 
 Clipboards can be named more than just numbers.
