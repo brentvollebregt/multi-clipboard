@@ -41,7 +41,7 @@ elif sys.argv[1] == "clear":
 
 elif sys.argv[1] == "view":
     if len(sys.argv) == 2:
-        clipboard_assist.view()
+        clipboard_assist.view(clipboards_location)
     elif len(sys.argv) == 3:
         if not clipboard_assist.view_single(clipboards_location, sys.argv[2]):
             print ("Clipboard " + sys.argv[2] + " does not exist")

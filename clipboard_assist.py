@@ -86,10 +86,13 @@ def view_single(clipboards_location, clipboard):
     else:
         return False
 
-def view():
+def view(clipboards_location):
     app = QtWidgets.QApplication(sys.argv)
+    # print (app.desktop().screenGeometry().width(), app.desktop().screenGeometry().height())
+    # print (QtWidgets.QDesktopWidget().screenGeometry(-1))
+    # print (app.primaryScreen().size().width(), app.primaryScreen().size().height())
     MainWindow = QtWidgets.QMainWindow()
-    prog = GUIObject(MainWindow)
+    prog = GUIObject(MainWindow, clipboards_location)
     MainWindow.show()
     sys.exit(app.exec_())
 
@@ -117,55 +120,68 @@ def bmpOrTxt(base):
         return False
 
 class GUIObject(GUI.Ui_MainWindow):
-    def __init__(self, MainWindow):
+    def __init__(self, MainWindow, clipboards_location):
         GUI.Ui_MainWindow.__init__(self)
         self.setupUi(MainWindow)
         self.MW = MainWindow
+        self.clipboards_location = clipboards_location
         MainWindow.setWindowOpacity(0.85)
         MainWindow.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         MainWindow.setFixedSize(MainWindow.frameGeometry().width(), MainWindow.frameGeometry().height())
 
         icon = QtGui.QPixmap('images/close.png')
         icon = icon.scaled(50, 50, QtCore.Qt.KeepAspectRatio)
-        self.label_8.setPixmap(icon)
-        clickable(self.label_8).connect(self.closeButton)
+        self.label_9.setPixmap(icon)
+        self.label_9.mousePressEvent = self.closeButton
 
         icon = QtGui.QPixmap('images/delete.png')
         icon = icon.scaled(50, 50, QtCore.Qt.KeepAspectRatio)
-        self.label_9.setPixmap(icon)
+        self.label_8.setPixmap(icon)
+        self.label_8.mousePressEvent = self.deleteButton
 
         icon = QtGui.QPixmap('images/refresh.png')
         icon = icon.scaled(50, 50, QtCore.Qt.KeepAspectRatio)
         self.label_7.setPixmap(icon)
+        self.label_7.mousePressEvent = self.refreshButton
 
         icon = QtGui.QPixmap('images/add.png')
         icon = icon.scaled(50, 50, QtCore.Qt.KeepAspectRatio)
         self.label_6.setPixmap(icon)
+        self.label_6.mousePressEvent = self.addButton
 
-    def closeButton(self):
-        self.MW.close()
 
-    def deleteButton(self):
-        print ("Delete")
+        self.clipboards = []
+        for item in os.listdir(self.clipboards_location):
+            if item.endswith('.bmp') or item.endswith('.png'):
+                self.clipboards.append(item)
 
-    def addButton(self):
+        # TODO Display each label
+        # Size them
+        # Size window
+
+
+    def closeButton(self, event):
+                self.MW.close()
+
+    def deleteButton(self, event):
+        reply = QtWidgets.QMessageBox.warning(self.MW,
+                                              'Warning',
+                                              "You are about to clear all clipboards.\nDo you want to proceed?",
+                                              QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+        if reply == QtWidgets.QMessageBox.Yes:
+            print ("Delete")
+
+    def addButton(self, event):
         print ("Add")
 
-    def keyPressEvent(self):
-        print ("some key")
+    def refreshButton(self, event):
+        print ("Refresh")
 
-def clickable(widget):
-    class Filter(QtCore.QObject):
-        clicked = QtCore.pyqtSignal()
-        def eventFilter(self, obj, event):
-            if obj == widget:
-                if event.type() == QtCore.QEvent.MouseButtonRelease:
-                    if obj.rect().contains(event.pos()):
-                        self.clicked.emit()
-                        # The developer can opt for .emit(obj) to get the object within the slot.
-                        return True
-
-            return False
-    filter = Filter(widget)
-    widget.installEventFilter(filter)
-    return filter.clicked
+    def labelClickEvent(self, event):
+        widgets = self.centralwidget.children()
+        for widget in widgets:
+            hasGeo = getattr(widget, "mapToGlobal", None)
+            if not callable(hasGeo):
+                continue
+            if widget.mapToGlobal(event.pos()) == event.globalPos():
+                print (widget.objectName())

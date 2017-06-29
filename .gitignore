@@ -103,3 +103,5 @@ ENV/
 # User
 .idea/
 Examples/
+clipboards/
+Testing.py
