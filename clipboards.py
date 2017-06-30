@@ -15,6 +15,9 @@ logging.basicConfig(
     filename='log.log',
     level=logging_level,
 )
+if len(sys.argv) < 2:
+    print ("Usage: python clipboards.py {switch, clear, view}")
+    exit()
 
 if sys.argv[1] == "switch":
     if len(sys.argv) == 3:
@@ -29,7 +32,7 @@ if sys.argv[1] == "switch":
 elif sys.argv[1] == "clear":
     if len(sys.argv) == 2:
         for clipboard in os.listdir(clipboards_location):
-            clipboard_assist.clear(clipboards_location, clipboard)
+            clipboard_assist.clear(clipboards_location, clipboard[:-4])
         data["current_clipboard"] = '1'
         clipboard_assist.setData(data)
     elif len(sys.argv) == 3:

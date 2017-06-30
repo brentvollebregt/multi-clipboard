@@ -88,9 +88,6 @@ def view_single(clipboards_location, clipboard):
 
 def view(clipboards_location):
     app = QtWidgets.QApplication(sys.argv)
-    # print (app.desktop().screenGeometry().width(), app.desktop().screenGeometry().height())
-    # print (QtWidgets.QDesktopWidget().screenGeometry(-1))
-    # print (app.primaryScreen().size().width(), app.primaryScreen().size().height())
     MainWindow = QtWidgets.QMainWindow()
     prog = GUIObject(MainWindow, clipboards_location)
     MainWindow.show()
@@ -122,12 +119,11 @@ def bmpOrTxt(base):
 class GUIObject(GUI.Ui_MainWindow):
     def __init__(self, MainWindow, clipboards_location):
         GUI.Ui_MainWindow.__init__(self)
-        self.setupUi(MainWindow)
         self.MW = MainWindow
+        self.setupUi(self.MW)
         self.clipboards_location = clipboards_location
-        MainWindow.setWindowOpacity(0.85)
-        MainWindow.setWindowFlags(QtCore.Qt.FramelessWindowHint)
-        MainWindow.setFixedSize(MainWindow.frameGeometry().width(), MainWindow.frameGeometry().height())
+        self.MW.setWindowOpacity(0.85)
+        self.MW.setWindowFlags(QtCore.Qt.FramelessWindowHint)
 
         icon = QtGui.QPixmap('images/close.png')
         icon = icon.scaled(50, 50, QtCore.Qt.KeepAspectRatio)
@@ -152,12 +148,82 @@ class GUIObject(GUI.Ui_MainWindow):
 
         self.clipboards = []
         for item in os.listdir(self.clipboards_location):
-            if item.endswith('.bmp') or item.endswith('.png'):
+            if item.endswith('.bmp') or item.endswith('.txt'):
                 self.clipboards.append(item)
+        self.clipboards = self.clipboards[::-1] # Reverse for pop
 
-        # TODO Display each label
-        # Size them
-        # Size window
+        if len(self.clipboards) <= 5:
+            level = 1
+        else:
+            clipboard_amount = len(self.clipboards) - 5
+            level = 1 + int(clipboard_amount / 6)
+            if clipboard_amount % 6 != 0:
+                level += 1
+
+        # TODO {IDEA} Tooltip for clipboard number/whatever
+        self.clipboard_labels = {}
+        labels = 0
+        if level == 1:
+            for i in range(len(self.clipboards)):
+                tmp = self.clipboards.pop()
+                self.clipboard_labels[labels] = QtWidgets.QLabel(self.centralwidget)
+                self.clipboard_labels[labels].setGeometry(QtCore.QRect((10 + (140 * labels)), 10, 131, 131))
+                self.clipboard_labels[labels].setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+                self.clipboard_labels[labels].setStyleSheet("")
+                self.clipboard_labels[labels].setFrameShape(QtWidgets.QFrame.Box)
+                self.clipboard_labels[labels].setText(tmp)
+                self.clipboard_labels[labels].setAlignment(QtCore.Qt.AlignCenter)
+                self.clipboard_labels[labels].setWordWrap(True)
+                self.clipboard_labels[labels].setTextInteractionFlags(QtCore.Qt.TextSelectableByMouse)
+                labels += 1
+
+            self.label_6.setGeometry(QtCore.QRect((10 + (140 * labels)), 10, 61, 61))
+            self.label_7.setGeometry(QtCore.QRect((80 + (140 * labels)), 10, 61, 61))
+            self.label_8.setGeometry(QtCore.QRect((10 + (140 * labels)), 80, 61, 61))
+            self.label_9.setGeometry(QtCore.QRect((80 + (140 * labels)), 80, 61, 61))
+            self.MW.resize((151 + (140 * labels)), 151)
+
+        else:
+            for i in range(5):
+                tmp = self.clipboards.pop()
+                self.clipboard_labels[labels] = QtWidgets.QLabel(self.centralwidget)
+                self.clipboard_labels[labels].setGeometry(QtCore.QRect((10 + (140 * labels)), 10, 131, 131))
+                self.clipboard_labels[labels].setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+                self.clipboard_labels[labels].setStyleSheet("")
+                self.clipboard_labels[labels].setFrameShape(QtWidgets.QFrame.Box)
+                self.clipboard_labels[labels].setText(tmp)
+                self.clipboard_labels[labels].setAlignment(QtCore.Qt.AlignCenter)
+                self.clipboard_labels[labels].setWordWrap(True)
+                self.clipboard_labels[labels].setTextInteractionFlags(QtCore.Qt.TextSelectableByMouse)
+                labels += 1
+            for current_mid_level in range(level - 2): # Change height based on level and ratio labels back down
+                for i in range(6):
+                    tmp = self.clipboards.pop()
+                    self.clipboard_labels[labels] = QtWidgets.QLabel(self.centralwidget)
+                    self.clipboard_labels[labels].setGeometry(QtCore.QRect((10 + (140 * (labels - 5 - (current_mid_level * 6)))), (10 + (140 * (current_mid_level + 1))), 131, 131))
+                    self.clipboard_labels[labels].setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+                    self.clipboard_labels[labels].setStyleSheet("")
+                    self.clipboard_labels[labels].setFrameShape(QtWidgets.QFrame.Box)
+                    self.clipboard_labels[labels].setText(tmp)
+                    self.clipboard_labels[labels].setAlignment(QtCore.Qt.AlignCenter)
+                    self.clipboard_labels[labels].setWordWrap(True)
+                    self.clipboard_labels[labels].setTextInteractionFlags(QtCore.Qt.TextSelectableByMouse)
+                    labels += 1
+            for i in range(len(self.clipboards)): # Change height based on level and ratio labels back down
+                tmp = self.clipboards.pop()
+                self.clipboard_labels[labels] = QtWidgets.QLabel(self.centralwidget)
+                self.clipboard_labels[labels].setGeometry(QtCore.QRect((10 + (140 * (labels - 5 - ((level - 2) * 6)))), (10 + (140 * (level - 1))), 131, 131))
+                self.clipboard_labels[labels].setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+                self.clipboard_labels[labels].setStyleSheet("")
+                self.clipboard_labels[labels].setFrameShape(QtWidgets.QFrame.Box)
+                self.clipboard_labels[labels].setText(tmp)
+                self.clipboard_labels[labels].setAlignment(QtCore.Qt.AlignCenter)
+                self.clipboard_labels[labels].setWordWrap(True)
+                self.clipboard_labels[labels].setTextInteractionFlags(QtCore.Qt.TextSelectableByMouse)
+                labels += 1
+
+            self.MW.resize(851 , (10 + (140 * level)))
+
 
 
     def closeButton(self, event):
