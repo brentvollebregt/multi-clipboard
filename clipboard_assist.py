@@ -189,7 +189,14 @@ class GUIObject(GUI.Ui_MainWindow):
         self.clipboard_labels[labels] = QtWidgets.QLabel(self.centralwidget)
         self.clipboard_labels[labels].setGeometry(QtCore.QRect(x, y, 131, 131))
         self.clipboard_labels[labels].setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.clipboard_labels[labels].setStyleSheet("")
+
+        data = getData()
+        if data["current_clipboard"] == tmp[:-4]:
+            self.clipboard_labels[labels].setStyleSheet("""
+                                                        QLabel {border: 1px solid #ffaa00;}
+                                                        QLabel:hover {border: 2px solid #ffaa00;}
+                                                        """)
+
         self.clipboard_labels[labels].setFrameShape(QtWidgets.QFrame.Box)
         self.clipboard_labels[labels].setText(tmp)
         self.clipboard_labels[labels].setAlignment(QtCore.Qt.AlignCenter)
@@ -216,11 +223,24 @@ class GUIObject(GUI.Ui_MainWindow):
                                                   "You are about to clear all clipboards.\nDo you want to proceed?",
                                                   QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
             if reply == QtWidgets.QMessageBox.Yes:
-                print ("Delete")
+                clipboards = []
+                for labels in self.clipboard_labels:
+                    clear(self.clipboards_location, self.clipboard_labels[labels].id[:-4])
+                self.refresh()
 
     def addButton(self, event):
         if event.button() == 1:
-            print ("Add")
+            new_clipboard_id = 1
+            current_clipboards = os.listdir(self.clipboards_location)
+            current_clipboards_wo_extn = [i[:-4] for i in current_clipboards]
+            while True:
+                if str(new_clipboard_id) not in current_clipboards_wo_extn:
+                    f = open(self.clipboards_location + str(new_clipboard_id) + ".txt", 'w')
+                    f.close()
+                    break
+                else:
+                    new_clipboard_id += 1
+            self.refresh()
 
     def refreshButton(self, event):
         if event.button() == 1:
@@ -254,12 +274,12 @@ class Label_Context_Menu():
         self.menu.addSeparator()
         self.menu.addAction(QtWidgets.QAction('switch', self.label))
     def on_menu_call(self, point):
-        action = self.menu.exec_(self.label.mapToGlobal(point)).text()
-        if action == "clear":
-            clear(self.clipboards_location, self.id[:-4])
-            self.parent.refresh()
-        elif action == "view": # TODO Show
-            print ("view")
-        elif action == "switch": # TODO Witch
-            print ("switch")
-        print ("\t" + self.id)
+        action = self.menu.exec_(self.label.mapToGlobal(point))
+        if action != None:
+            if action.text() == "clear":
+                clear(self.clipboards_location, self.id[:-4])
+                self.parent.refresh()
+            elif action.text() == "view": # TODO Show
+                print ("view")
+            elif action.text() == "switch": # TODO Switch
+                print ("switch")
