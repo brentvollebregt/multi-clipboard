@@ -198,7 +198,15 @@ class GUIObject(GUI.Ui_MainWindow):
                                                         """)
 
         self.clipboard_labels[labels].setFrameShape(QtWidgets.QFrame.Box)
-        self.clipboard_labels[labels].setText(tmp)
+
+        if tmp.endswith(".txt"):
+            f = open(self.clipboards_location + tmp, 'r')
+            self.clipboard_labels[labels].setText(f.read())
+            f.close()
+        elif tmp.endswith(".bmp"):
+            pixmap = QtGui.QPixmap(self.clipboards_location + tmp).scaled(131, 131, QtCore.Qt.KeepAspectRatio, QtCore.Qt.FastTransformation)
+            self.clipboard_labels[labels].setPixmap(pixmap)
+
         self.clipboard_labels[labels].setAlignment(QtCore.Qt.AlignCenter)
         self.clipboard_labels[labels].setWordWrap(True)
         self.clipboard_labels[labels].setTextInteractionFlags(QtCore.Qt.TextSelectableByMouse)
