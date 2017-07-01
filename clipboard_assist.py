@@ -117,13 +117,14 @@ def bmpOrTxt(base):
         return False
 
 class GUIObject(GUI.Ui_MainWindow):
-    def __init__(self, MainWindow, clipboards_location):
+    def __init__(self, MainWindow, clipboards_location, initial=True):
         GUI.Ui_MainWindow.__init__(self)
         self.MW = MainWindow
         self.setupUi(self.MW)
         self.clipboards_location = clipboards_location
         self.MW.setWindowOpacity(0.85)
-        self.MW.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+        if initial:
+            self.MW.setWindowFlags(QtCore.Qt.FramelessWindowHint)
 
         icon = QtGui.QPixmap('images/close.png')
         icon = icon.scaled(50, 50, QtCore.Qt.KeepAspectRatio)
@@ -160,7 +161,6 @@ class GUIObject(GUI.Ui_MainWindow):
             if clipboard_amount % 6 != 0:
                 level += 1
 
-        # TODO {IDEA} Tooltip for clipboard number/whatever
         self.clipboard_labels = {}
         labels = 0
         if level == 1:
@@ -196,48 +196,70 @@ class GUIObject(GUI.Ui_MainWindow):
         self.clipboard_labels[labels].setWordWrap(True)
         self.clipboard_labels[labels].setTextInteractionFlags(QtCore.Qt.TextSelectableByMouse)
         self.clipboard_labels[labels].setToolTip("Clipboard: " + tmp[:-4])
+        self.clipboard_labels[labels].id = tmp
+        self.clipboard_labels[labels].mousePressEvent = self.labelClickEvent
 
-        self.clipboard_labels[labels].customContext = Label_Context_Menu(tmp, self.clipboard_labels[labels])
+        self.clipboard_labels[labels].customContext = Label_Context_Menu(tmp, self.clipboard_labels[labels], self.clipboards_location, self)
         self.clipboard_labels[labels].setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.clipboard_labels[labels].customContextMenuRequested.connect(self.clipboard_labels[labels].customContext.on_menu_call)
 
         return labels + 1
 
     def closeButton(self, event):
-                self.MW.close()
+        if event.button() == 1:
+            self.MW.close()
 
     def deleteButton(self, event):
-        reply = QtWidgets.QMessageBox.warning(self.MW,
-                                              'Warning',
-                                              "You are about to clear all clipboards.\nDo you want to proceed?",
-                                              QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
-        if reply == QtWidgets.QMessageBox.Yes:
-            print ("Delete")
+        if event.button() == 1:
+            reply = QtWidgets.QMessageBox.warning(self.MW,
+                                                  'Warning',
+                                                  "You are about to clear all clipboards.\nDo you want to proceed?",
+                                                  QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+            if reply == QtWidgets.QMessageBox.Yes:
+                print ("Delete")
 
     def addButton(self, event):
-        print ("Add")
+        if event.button() == 1:
+            print ("Add")
 
     def refreshButton(self, event):
-        print ("Refresh")
+        if event.button() == 1:
+            self.refresh()
 
-    def labelClickEvent(self, event):
-        widgets = self.centralwidget.children()
-        for widget in widgets:
-            hasGeo = getattr(widget, "mapToGlobal", None)
-            if not callable(hasGeo):
-                continue
-            if widget.mapToGlobal(event.pos()) == event.globalPos():
-                print (widget.objectName())
+    def refresh(self):
+        self.clipboard_labels = {}
+        self.__init__(self.MW, self.clipboards_location, initial=False)
+
+    def labelClickEvent(self, event): # TODO Switch
+        if event.button() == 1:
+            widgets = self.centralwidget.children()
+            for widget in widgets:
+                hasGeo = getattr(widget, "mapToGlobal", None)
+                if not callable(hasGeo):
+                    continue
+                if widget.mapToGlobal(event.pos()) == event.globalPos():
+                    break
+            print (widget.id)
 
 
 class Label_Context_Menu():
-    def __init__(self, id, label):
+    def __init__(self, id, label, clipboards_location, parent):
         self.id = id
         self.label = label
+        self.clipboards_location = clipboards_location
+        self.parent = parent
         self.menu = QtWidgets.QMenu(self.label)
-        self.menu.addAction(QtWidgets.QAction('delete', self.label))
+        self.menu.addAction(QtWidgets.QAction('clear', self.label))
         self.menu.addAction(QtWidgets.QAction('view', self.label))
         self.menu.addSeparator()
         self.menu.addAction(QtWidgets.QAction('switch', self.label))
     def on_menu_call(self, point):
-        self.menu.exec_(self.label.mapToGlobal(point))
+        action = self.menu.exec_(self.label.mapToGlobal(point)).text()
+        if action == "clear":
+            clear(self.clipboards_location, self.id[:-4])
+            self.parent.refresh()
+        elif action == "view": # TODO Show
+            print ("view")
+        elif action == "switch": # TODO Witch
+            print ("switch")
+        print ("\t" + self.id)
