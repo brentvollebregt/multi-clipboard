@@ -29,7 +29,7 @@ Clipboards can be named more than just numbers.
 
 ## GUI
 
-# Usage
+### Usage
 * Click on clipboard to switch to it (auto close feature mentioned below)
 * Right click menu on each clipboard
 * Clear all clipboards option
@@ -37,7 +37,7 @@ Clipboards can be named more than just numbers.
 * Can add from the GUI (will pick the lowest integer)
 * Displays both text and images
 
-# Features
+### Features
 * Dark stylesheet and transparent
 * Dynamically displays contents of clipboards
 * Will save current clipboard on startup (so you can see what the state it would be if it is switched)
