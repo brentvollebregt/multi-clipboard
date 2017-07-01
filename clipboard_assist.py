@@ -182,7 +182,6 @@ class GUIObject(GUI.Ui_MainWindow):
 
             self.MW.resize(851 , (10 + (140 * level)))
 
-
     def createLabel(self, labels, x, y):
         tmp = self.clipboards.pop()
         self.clipboard_labels[labels] = QtWidgets.QLabel(self.centralwidget)
@@ -277,7 +276,6 @@ class GUIObject(GUI.Ui_MainWindow):
             else:
                 self.refresh()
 
-
 class Label_Context_Menu():
     def __init__(self, id, label, clipboards_location, parent):
         self.id = id
@@ -289,6 +287,7 @@ class Label_Context_Menu():
         self.menu.addAction(QtWidgets.QAction('view', self.label))
         self.menu.addSeparator()
         self.menu.addAction(QtWidgets.QAction('switch', self.label))
+
     def on_menu_call(self, point):
         action = self.menu.exec_(self.label.mapToGlobal(point))
         if action != None:

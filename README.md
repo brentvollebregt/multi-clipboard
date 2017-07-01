@@ -27,5 +27,21 @@ Clipboards can be named more than just numbers.
 * clipboards.py view - View all clipboards (opens GUI)
 * clipboards.py view 1 - Views clipboard 1
 
-## Still in Development
-The GUI is still in development and currently will only display the frame, to close you can use the close button on the bottom right. In the future this will display all cipboards and here you will be able to switch between them easily without a command.
+## GUI
+
+# Usage
+* Click on clipboard to switch to it (auto close feature mentioned below)
+* Right click menu on each clipboard
+* Clear all clipboards option
+* Easy refresh
+* Can add from the GUI (will pick the lowest integer)
+* Displays both text and images
+
+# Features
+* Dark stylesheet and transparent
+* Dynamically displays contents of clipboards
+* Will save current clipboard on startup (so you can see what the state it would be if it is switched)
+* "close_on_gui_select" value (true/false) in data.json to close GUI when a a clipboard is selected when true
+
+## Notes
+I have included RunGUI.vbs to be attached to a hot key so the GUI can easily be opened
