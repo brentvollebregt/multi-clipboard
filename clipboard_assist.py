@@ -4,9 +4,7 @@ from io import BytesIO
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 import GUI
-import logging
 import os
-import shutil
 import json
 
 def saveClipboard(clipboards_location, data):
@@ -299,7 +297,7 @@ class Label_Context_Menu():
                 if self.id.endswith(".txt"):
                     self.label.Form = QtWidgets.QWidget()
                     self.label.ui = GUI.Text_Explorer()
-                    self.label.ui.setupUi(self.label.Form, self.label.text(), self.parent.MW.styleSheet())
+                    self.label.ui.setupUi(self.label.Form, self.label.text(), self.parent.MW.styleSheet(), self.id[:-4])
                     self.label.Form.show()
 
                 elif self.id.endswith(".bmp"):

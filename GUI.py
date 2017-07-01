@@ -138,7 +138,7 @@ class Ui_MainWindow(object):
         return label
 
 class Text_Explorer(QtWidgets.QDialog):
-    def setupUi(self, Form, data, stylesheet):
+    def setupUi(self, Form, data, stylesheet, clipboard):
         Form.setObjectName("Form")
         Form.resize(400, 300)
         Form.setStyleSheet(stylesheet)
@@ -149,10 +149,5 @@ class Text_Explorer(QtWidgets.QDialog):
         self.textBrowser.setHtml(data)
         self.gridLayout.addWidget(self.textBrowser, 0, 0, 1, 1)
 
-        self.retranslateUi(Form)
+        Form.setWindowTitle("Clipboard " + clipboard)
         QtCore.QMetaObject.connectSlotsByName(Form)
-
-    def retranslateUi(self, Form):
-        _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
-
