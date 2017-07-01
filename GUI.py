@@ -136,3 +136,23 @@ class Ui_MainWindow(object):
         label.setWordWrap(True)
         label.setTextInteractionFlags(QtCore.Qt.TextSelectableByMouse)
         return label
+
+class Text_Explorer(QtWidgets.QDialog):
+    def setupUi(self, Form, data, stylesheet):
+        Form.setObjectName("Form")
+        Form.resize(400, 300)
+        Form.setStyleSheet(stylesheet)
+        self.gridLayout = QtWidgets.QGridLayout(Form)
+        self.gridLayout.setObjectName("gridLayout")
+        self.textBrowser = QtWidgets.QTextBrowser(Form)
+        self.textBrowser.setObjectName("textBrowser")
+        self.textBrowser.setHtml(data)
+        self.gridLayout.addWidget(self.textBrowser, 0, 0, 1, 1)
+
+        self.retranslateUi(Form)
+        QtCore.QMetaObject.connectSlotsByName(Form)
+
+    def retranslateUi(self, Form):
+        _translate = QtCore.QCoreApplication.translate
+        Form.setWindowTitle(_translate("Form", "Form"))
+

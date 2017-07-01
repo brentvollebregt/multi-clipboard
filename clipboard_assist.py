@@ -73,13 +73,11 @@ def clear(clipboards_location, clipboard):
 def view_single(clipboards_location, clipboard):
     extension = bmpOrTxt(clipboards_location + clipboard)
     if extension == '.bmp':
-        image = Image.open(clipboards_location + sys.argv[2] + ".bmp")
+        image = Image.open(clipboards_location + clipboard + ".bmp")
         image.show()
-        print ("Image displayed")
         return True
     elif extension == '.txt':
-        print ("Clipboard text:")
-        f = open(clipboards_location + sys.argv[2] + ".txt", 'r')
+        f = open(clipboards_location + clipboard + ".txt", 'r')
         print (f.read())
         f.close()
         return True
@@ -287,7 +285,16 @@ class Label_Context_Menu():
             if action.text() == "clear":
                 clear(self.clipboards_location, self.id[:-4])
                 self.parent.refresh()
-            elif action.text() == "view": # TODO Show
-                print ("view")
+
+            elif action.text() == "view":
+                if self.id.endswith(".txt"):
+                    self.label.Form = QtWidgets.QWidget()
+                    self.label.ui = GUI.Text_Explorer()
+                    self.label.ui.setupUi(self.label.Form, "Hwllow now?", self.parent.MW.styleSheet())
+                    self.label.Form.show()
+
+                elif self.id.endswith(".bmp"):
+                    view_single(self.clipboards_location, self.id[:-4])
+
             elif action.text() == "switch": # TODO Switch
                 print ("switch")
