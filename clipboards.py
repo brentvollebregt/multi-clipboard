@@ -1,20 +1,10 @@
 import clipboard_assist
-import logging
 import sys
 import os
 
 clipboards_location = os.getcwd() + "/clipboards/"
 data = clipboard_assist.getData()
 
-if data['logging']:
-    logging_level = logging.DEBUG
-else:
-    logging_level = logging.ERROR
-logging.basicConfig(
-    format='%(asctime)s:%(levelname)s:%(message)s',
-    filename='log.log',
-    level=logging_level,
-)
 if len(sys.argv) < 2:
     print ("Usage: python clipboards.py {switch, clear, view}")
     exit()
