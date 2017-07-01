@@ -123,6 +123,7 @@ class GUIObject(GUI.Ui_MainWindow):
         self.MW.setWindowOpacity(0.85)
         if initial:
             self.MW.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+        saveClipboard(self.clipboards_location, getData())
 
         icon = QtGui.QPixmap('images/close.png')
         icon = icon.scaled(50, 50, QtCore.Qt.KeepAspectRatio)
@@ -201,6 +202,7 @@ class GUIObject(GUI.Ui_MainWindow):
             f = open(self.clipboards_location + tmp, 'r')
             self.clipboard_labels[labels].setText(f.read())
             f.close()
+            self.clipboard_labels[labels].setMargin(3)
         elif tmp.endswith(".bmp"):
             pixmap = QtGui.QPixmap(self.clipboards_location + tmp).scaled(131, 131, QtCore.Qt.KeepAspectRatio, QtCore.Qt.FastTransformation)
             self.clipboard_labels[labels].setPixmap(pixmap)
@@ -256,7 +258,7 @@ class GUIObject(GUI.Ui_MainWindow):
         self.clipboard_labels = {}
         self.__init__(self.MW, self.clipboards_location, initial=False)
 
-    def labelClickEvent(self, event): # TODO Switch
+    def labelClickEvent(self, event):
         if event.button() == 1:
             widgets = self.centralwidget.children()
             for widget in widgets:
@@ -265,7 +267,15 @@ class GUIObject(GUI.Ui_MainWindow):
                     continue
                 if widget.mapToGlobal(event.pos()) == event.globalPos():
                     break
-            print (widget.id)
+            data = getData()
+            saveClipboard(self.clipboards_location, data)
+            loadClipboard(self.clipboards_location, widget.id[:-4])
+            data["current_clipboard"] = widget.id[:-4]
+            setData(data)
+            if data["close_on_gui_select"]:
+                self.MW.close()
+            else:
+                self.refresh()
 
 
 class Label_Context_Menu():
@@ -290,11 +300,16 @@ class Label_Context_Menu():
                 if self.id.endswith(".txt"):
                     self.label.Form = QtWidgets.QWidget()
                     self.label.ui = GUI.Text_Explorer()
-                    self.label.ui.setupUi(self.label.Form, "Hwllow now?", self.parent.MW.styleSheet())
+                    self.label.ui.setupUi(self.label.Form, self.label.text(), self.parent.MW.styleSheet())
                     self.label.Form.show()
 
                 elif self.id.endswith(".bmp"):
                     view_single(self.clipboards_location, self.id[:-4])
 
-            elif action.text() == "switch": # TODO Switch
-                print ("switch")
+            elif action.text() == "switch":
+                data = getData()
+                saveClipboard(self.clipboards_location, data)
+                loadClipboard(self.clipboards_location, self.id[:-4])
+                data["current_clipboard"] = self.id[:-4]
+                setData(data)
+                self.parent.refresh()
