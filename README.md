@@ -29,6 +29,8 @@ Clipboards can be named more than just numbers.
 
 ## GUI
 
+![GUI Example](https://raw.githubusercontent.com/brentvollebregt/mutli-clipboard/master/images/GUI.JPG "GUI Example")
+
 ### Usage
 * Click on clipboard to switch to it (auto close feature mentioned below)
 * Right click menu on each clipboard
