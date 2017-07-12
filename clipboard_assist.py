@@ -220,7 +220,17 @@ class GUIObject(GUI.Ui_MainWindow):
 
         if tmp.endswith(".txt"):
             f = open(self.clipboards_location + tmp, 'r')
-            self.clipboard_labels[labels].setText(f.read())
+            data_type = f.readline().strip()
+            # If contents is a list of files format appropriately
+            if data_type == "FILE":
+                files = literal_eval(f.read())
+                text = "Files:\n"
+                for filename in files:
+                    text += os.path.basename(filename) + "\n"
+                self.clipboard_labels[labels].setText(text)
+            # Otherwise show plain text
+            else:
+                self.clipboard_labels[labels].setText(f.read())
             f.close()
             self.clipboard_labels[labels].setMargin(3)
         elif tmp.endswith(".bmp"):
@@ -264,6 +274,7 @@ class GUIObject(GUI.Ui_MainWindow):
             while True:
                 if str(new_clipboard_id) not in current_clipboards_wo_extn:
                     f = open(self.clipboards_location + str(new_clipboard_id) + ".txt", 'w')
+                    f.write("TEXT\n")
                     f.close()
                     break
                 else:
