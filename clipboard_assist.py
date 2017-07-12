@@ -6,18 +6,33 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import GUI
 import os
 import json
+from ast import literal_eval
+import subprocess
 
 def saveClipboard(clipboards_location, data):
     if not os.path.exists(clipboards_location):
         os.makedirs(clipboards_location)
     try:
         win32clipboard.OpenClipboard()
-        current_clipboard_text = win32clipboard.GetClipboardData()
-        win32clipboard.CloseClipboard()
 
-        f = open(clipboards_location + data["current_clipboard"] + ".txt", 'w')
-        f.write(current_clipboard_text)
-        f.close()
+        # Check if the clipboard contains a list of file references
+        if win32clipboard.IsClipboardFormatAvailable(win32clipboard.CF_HDROP):
+            current_clipboard = list(win32clipboard.GetClipboardData(win32clipboard.CF_HDROP))
+            win32clipboard.CloseClipboard()
+
+            f = open(clipboards_location + data["current_clipboard"] + ".txt", 'w')
+            f.write("FILE\n")
+            f.write(str(current_clipboard))
+            f.close()
+        # Otherwise, treat it as text and let the normal exceptions handle the rest
+        else:
+            current_clipboard = win32clipboard.GetClipboardData()
+            win32clipboard.CloseClipboard()
+
+            f = open(clipboards_location + data["current_clipboard"] + ".txt", 'w')
+            f.write("TEXT\n")
+            f.write(current_clipboard)
+            f.close()
 
         if os.path.isfile(clipboards_location + data["current_clipboard"] + ".bmp"):
             os.remove(clipboards_location + data["current_clipboard"] + ".bmp")
@@ -52,13 +67,21 @@ def loadClipboard(clipboards_location, clipboard):
         pass
     elif os.path.isfile(clipboards_location + clipboard + ".txt"):
         f = open(clipboards_location + clipboard + ".txt")
-        clipboard_data = f.read()
-        f.close()
+        data_type = f.readline().strip()
+        # Read the type of data
+        if data_type == "FILE":
+            # Set the file data using powershell commands as its much easier, and fits majority of use cases
+            clipboard_data = "(" + f.read()[1:-1] + ")"
+            subprocess.call(["powershell.exe", "Set-Clipboard -Path " + clipboard_data])
+        # Assume text if nothing else
+        else:
+            clipboard_data = f.read()
+            win32clipboard.OpenClipboard()
+            win32clipboard.EmptyClipboard()
+            win32clipboard.SetClipboardText(clipboard_data)
+            win32clipboard.CloseClipboard()
 
-        win32clipboard.OpenClipboard()
-        win32clipboard.EmptyClipboard()
-        win32clipboard.SetClipboardText(clipboard_data)
-        win32clipboard.CloseClipboard()
+        f.close()
 
 def clear(clipboards_location, clipboard):
     extension = bmpOrTxt(clipboards_location + clipboard)
