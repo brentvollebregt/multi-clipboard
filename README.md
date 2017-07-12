@@ -1,9 +1,7 @@
 # mutli-clipboard
-switch clipboard contents using easily using a command 
-
+Switch clipboard contents using easily using a command<br />
+Images, text and files are supported and unlimited amounts of saved clipboards can be created.<br />
 The idea of this is to easily switch keyboards with simple commands. Map commands to keys to use this easily.
-
-Images and text are supported and unlimited amounts of saved clipboards can be created.
 
 ## What This Does
 This acts as a hotbar in a game would. When 1 is passed and you are currently using 2 (current is saved in data.json), your clipboard contents will be saved in 2 and 1 will then be loaded; if 1 hasn't been used before, the current clipboard is kept but the data is still saved to 2.
@@ -19,7 +17,6 @@ Clipboards can be named more than just numbers.
 1. Install PIL if you are using Python 3 ( `pip install Pillow` )
 2. Install PYQT5 ( `pip install pyqt5` )
 3. Install pywin32 ( `pip install pypiwin32` or [Installer](https://sourceforge.net/projects/pywin32/files/pywin32/))
-4. Run the command on `clipboards.py`
 
 ## Usage
 * `clipboards.py switch [clipboard]` - Will switch current clipboard to the clipboard specified
@@ -46,5 +43,11 @@ Clipboards can be named more than just numbers.
 * Will save current clipboard on startup (so you can see what the state it would be if it is switched)
 * "close_on_gui_select" value (true/false) in data.json to close GUI when a a clipboard is selected when true
 
+## Thanks to
+* [Michael Robertson](https://github.com/MBRobertson) for adding file support.
+
 ## Notes
-I have included RunGUI.vbs to be attached to a hot key so the GUI can easily be opened
+I have included RunGUI.vbs to be attached to a hot key so the GUI can easily be opened.
+
+## Current Issues/Bugs
+* When cutting files and switching clipboards, files will only be copied when clipboards are swapped back and pasted.
