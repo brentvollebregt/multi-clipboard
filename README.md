@@ -16,16 +16,17 @@ When currently using is 1 and you pass 2:<br />
 Clipboards can be named more than just numbers.
 
 ## Installation/Setup
-1. Install PIL if you are using Python 3 (pip install Pillow)
-2. Install PYQT5 (pip install pyqt5)
-2. Run the command on clipboards.py
+1. Install PIL if you are using Python 3 ( `pip install Pillow` )
+2. Install PYQT5 ( `pip install pyqt5` )
+3. Install pywin32 ( `pip install pypiwin32` or [Installer](https://sourceforge.net/projects/pywin32/files/pywin32/))
+4. Run the command on `clipboards.py`
 
 ## Usage
-* clipboards.py switch clipboard - Will switch current clipboard to the clipboard specified
-* clipboards.py clear - Clear all clipboards
-* clipboards.py clear 1 - Clear clipboard 1
-* clipboards.py view - View all clipboards (opens GUI)
-* clipboards.py view 1 - Views clipboard 1
+* `clipboards.py switch [clipboard]` - Will switch current clipboard to the clipboard specified
+* `clipboards.py clear` - Clear all clipboards
+* `clipboards.py clear 1` - Clear clipboard 1
+* `clipboards.py view` - View all clipboards (opens GUI)
+* `clipboards.py view 1` - Views clipboard 1
 
 ## GUI
 
