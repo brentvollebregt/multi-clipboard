@@ -24,8 +24,12 @@ def saveClipboard(clipboards_location, data):
             f.write("FILE\n")
             f.write(str(current_clipboard))
             f.close()
+
+            if os.path.isfile(clipboards_location + data["current_clipboard"] + ".bmp"):
+                os.remove(clipboards_location + data["current_clipboard"] + ".bmp")
+
         # Otherwise, treat it as text and let the normal exceptions handle the rest
-        else:
+        elif win32clipboard.IsClipboardFormatAvailable(win32clipboard.CF_TEXT):
             current_clipboard = win32clipboard.GetClipboardData()
             win32clipboard.CloseClipboard()
 
@@ -34,18 +38,20 @@ def saveClipboard(clipboards_location, data):
             f.write(current_clipboard)
             f.close()
 
-        if os.path.isfile(clipboards_location + data["current_clipboard"] + ".bmp"):
-            os.remove(clipboards_location + data["current_clipboard"] + ".bmp")
-    except TypeError:
-        try:
+            if os.path.isfile(clipboards_location + data["current_clipboard"] + ".bmp"):
+                os.remove(clipboards_location + data["current_clipboard"] + ".bmp")
+        # Image
+        elif win32clipboard.IsClipboardFormatAvailable(win32clipboard.CF_BITMAP):
             im = ImageGrab.grabclipboard()
             im.save(clipboards_location + data["current_clipboard"] + ".bmp", 'BMP')
 
             if os.path.isfile(clipboards_location + data["current_clipboard"] + ".txt"):
                 os.remove(clipboards_location + data["current_clipboard"] + ".txt")
-        except:
+        # Something other than text, file(s) or image data
+        else:
             print ("Clipbaord contents not supported")
             return False
+
     except Exception as e:
         print ("Unexpected error")
         print (e)
