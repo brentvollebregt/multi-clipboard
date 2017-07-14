@@ -7,7 +7,6 @@ import GUI
 import os
 import json
 from ast import literal_eval
-import subprocess
 
 def saveClipboard(clipboards_location, data):
     if not os.path.exists(clipboards_location):
@@ -78,7 +77,7 @@ def loadClipboard(clipboards_location, clipboard):
         if data_type == "FILE":
             # Set the file data using powershell commands as its much easier, and fits majority of use cases
             clipboard_data = "(" + f.read()[1:-1] + ")"
-            subprocess.call(["powershell.exe", "Set-Clipboard -Path " + clipboard_data])
+            win32clipboard.SetClipboardData(win32clipboard.CF_HDROP, str(clipboard_data).encode('utf-8'))
         # Assume text if nothing else
         else:
             clipboard_data = f.read()
