@@ -207,6 +207,7 @@ class GUIObject(GUI.Ui_MainWindow):
                 labels = self.createLabel(labels, (10 + (140 * (labels - 5 - ((level - 2) * 6)))), (10 + (140 * (level - 1))))
 
             self.MW.resize(851 , (10 + (140 * level)))
+        self.centre()
 
     def createLabel(self, labels, x, y):
         tmp = self.clipboards.pop()
@@ -293,6 +294,7 @@ class GUIObject(GUI.Ui_MainWindow):
     def refresh(self):
         self.clipboard_labels = {}
         self.__init__(self.MW, self.clipboards_location, initial=False)
+        self.centre()
 
     def labelClickEvent(self, event):
         if event.button() == 1:
@@ -312,6 +314,10 @@ class GUIObject(GUI.Ui_MainWindow):
                 self.MW.close()
             else:
                 self.refresh()
+
+    def centre(self):
+        self.MW.move(QtWidgets.QApplication.desktop().screen().rect().center()- self.MW.rect().center())
+
 
 class Label_Context_Menu():
     def __init__(self, id, label, clipboards_location, parent):
