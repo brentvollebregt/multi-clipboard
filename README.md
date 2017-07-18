@@ -1,4 +1,4 @@
-# mutli-clipboard
+# Mutli Clipboard
 Switch clipboard contents using easily using a command<br />
 Images, text and files are supported and unlimited amounts of saved clipboards can be created.<br />
 The idea of this is to easily switch keyboards with simple commands. Map commands to keys to use this easily.
@@ -48,6 +48,3 @@ Clipboards can be named more than just numbers.
 
 ## Notes
 I have included RunGUI.vbs to be attached to a hot key so the GUI can easily be opened.
-
-## Current Issues/Bugs
-* When cutting files and switching clipboards, files will only be copied when clipboards are swapped back and pasted.
