@@ -316,7 +316,12 @@ class GUIObject(GUI.Ui_MainWindow):
                 self.refresh()
 
     def centre(self):
-        self.MW.move(QtWidgets.QApplication.desktop().screen().rect().center()- self.MW.rect().center())
+        # Thanks to https://stackoverflow.com/questions/20243637/pyqt4-center-window-on-active-screen
+        frameGm = self.MW.frameGeometry()
+        screen = QtWidgets.QApplication.desktop().screenNumber(QtWidgets.QApplication.desktop().cursor().pos())
+        centerPoint = QtWidgets.QApplication.desktop().screenGeometry(screen).center()
+        frameGm.moveCenter(centerPoint)
+        self.MW.move(frameGm.topLeft())
 
 
 class Label_Context_Menu():
