@@ -37,11 +37,16 @@ Clipboards can be named more than just numbers.
 * Can add from the GUI (will pick the lowest integer)
 * Displays both text and images
 
+### Options
+* Close GUI when a clipboard is selected - found in data.json:close_on_gui_select
+* Keep window on top until closed - found in data.json:stay_on_top
+
 ### Features
 * Dark stylesheet and transparent
 * Dynamically displays contents of clipboards
 * Will save current clipboard on startup (so you can see what the state it would be if it is switched)
-* "close_on_gui_select" value (true/false) in data.json to close GUI when a a clipboard is selected when true
+* Can view all clipboard contents easily
+* Easily add and remove clipboards
 
 ## Thanks to
 * [Michael Robertson](https://github.com/MBRobertson) for adding file support.

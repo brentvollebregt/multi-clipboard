@@ -1,4 +1,5 @@
 {
     "close_on_gui_select": true,
+    "stay_on_top" : true,
     "current_clipboard": "2"
 }

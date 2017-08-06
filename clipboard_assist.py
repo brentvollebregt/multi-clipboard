@@ -148,7 +148,11 @@ class GUIObject(GUI.Ui_MainWindow):
         self.clipboards_location = clipboards_location
         self.MW.setWindowOpacity(0.85)
         if initial:
-            self.MW.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+            data = getData()
+            if data["stay_on_top"]:
+                self.MW.setWindowFlags(QtCore.Qt.FramelessWindowHint | QtCore.Qt.WindowStaysOnTopHint)
+            else:
+                self.MW.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         saveClipboard(self.clipboards_location, getData())
 
         icon = QtGui.QPixmap('images/close.png')
