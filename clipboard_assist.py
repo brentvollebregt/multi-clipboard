@@ -227,6 +227,8 @@ class GUIObject(GUI.Ui_MainWindow):
                                                         """)
 
         self.clipboard_labels[labels].setFrameShape(QtWidgets.QFrame.Box)
+        if getData()["html_as_plain_text"]:
+            self.clipboard_labels[labels].setTextFormat(QtCore.Qt.PlainText)
 
         if tmp.endswith(".txt"):
             f = open(self.clipboards_location + tmp, 'r')
