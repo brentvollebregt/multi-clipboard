@@ -77,7 +77,10 @@ def loadClipboard(clipboards_location, clipboard):
         if data_type == "FILE":
             # Set the file data using powershell commands as its much easier, and fits majority of use cases
             clipboard_data = "(" + f.read()[1:-1] + ")"
+            win32clipboard.OpenClipboard()
+            win32clipboard.EmptyClipboard()
             win32clipboard.SetClipboardData(win32clipboard.CF_HDROP, str(clipboard_data).encode('utf-8'))
+            win32clipboard.CloseClipboard()
         # Assume text if nothing else
         else:
             clipboard_data = f.read()

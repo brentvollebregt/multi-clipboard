@@ -1,5 +1,6 @@
 {
     "close_on_gui_select": true,
-    "stay_on_top" : true,
-    "current_clipboard": "2"
+    "current_clipboard": "1",
+    "html_as_plain_text": true,
+    "stay_on_top": true
 }
