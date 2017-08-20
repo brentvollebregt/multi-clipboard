@@ -340,7 +340,7 @@ class Label_Context_Menu():
         self.clipboards_location = clipboards_location
         self.parent = parent
         self.menu = QtWidgets.QMenu(self.label)
-        self.menu.addAction(QtWidgets.QAction('clear', self.label))
+        self.menu.addAction(QtWidgets.QAction('remove', self.label))
         self.menu.addAction(QtWidgets.QAction('view', self.label))
         self.menu.addSeparator()
         self.menu.addAction(QtWidgets.QAction('switch', self.label))
@@ -348,7 +348,7 @@ class Label_Context_Menu():
     def on_menu_call(self, point):
         action = self.menu.exec_(self.label.mapToGlobal(point))
         if action != None:
-            if action.text() == "clear":
+            if action.text() == "remove":
                 clear(self.clipboards_location, self.id[:-4])
                 self.parent.refresh()
 

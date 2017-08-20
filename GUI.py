@@ -133,8 +133,6 @@ class Ui_MainWindow(object):
         label.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         label.setFrameShape(QtWidgets.QFrame.Box)
         label.setAlignment(QtCore.Qt.AlignCenter)
-        label.setWordWrap(True)
-        label.setTextInteractionFlags(QtCore.Qt.TextSelectableByMouse)
         return label
 
 class Text_Explorer(QtWidgets.QDialog):
