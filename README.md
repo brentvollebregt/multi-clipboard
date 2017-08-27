@@ -27,7 +27,7 @@ Clipboards can be named more than just numbers.
 
 ## GUI
 
-![GUI Example](https://raw.githubusercontent.com/brentvollebregt/mutli-clipboard/master/images/GUI_Example.jpg "GUI Example")
+![GUI Example](http://i.imgur.com/dp42h1m.jpg "GUI Example")
 
 ### Usage
 * Click on clipboard to switch to it (auto close feature mentioned below)
@@ -40,6 +40,7 @@ Clipboards can be named more than just numbers.
 ### Options
 * Close GUI when a clipboard is selected - found in data.json:close_on_gui_select
 * Keep window on top until closed - found in data.json:stay_on_top
+* Display HTML as plain text instead of rendering it in the GUI - found in data.json:html_as_plain_text
 
 ### Features
 * Dark stylesheet and transparent
