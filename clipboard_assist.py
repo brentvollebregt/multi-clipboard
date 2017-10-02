@@ -197,7 +197,7 @@ class GUIObject(Ui_MainWindow):
         self.MW = MainWindow
         self.setupUi(self.MW)
         self.clipboards_location = clipboards_location
-        self.MW.setWindowOpacity(0.85)
+        self.MW.setWindowOpacity(getData()["opacity"])
         if initial:
             data = getData()
             if data["stay_on_top"]:
