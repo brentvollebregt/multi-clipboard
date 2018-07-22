@@ -16,7 +16,7 @@ else:
             data["current_clipboard"] = clipboard
             clipboard_assist.setData(data)
         else:
-            print ("Usage: python clipboards.py switch clipboard")
+            print ("Usage: python clipboards.py switch [clipboard]")
 
     elif sys.argv[1] == "clear":
         if len(sys.argv) == 2:

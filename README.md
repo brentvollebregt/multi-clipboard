@@ -15,6 +15,13 @@ This acts as a hotbar in a game would. The main feature of this project is the G
 
 ![GUI Example](http://i.imgur.com/dp42h1m.jpg "GUI Example")
 
+### Features
+* Very easily switch clipboard contents
+* Dark stylesheet and transparency
+* Dynamically displays contents of clipboards
+* Can view all clipboard contents easily
+* Easily add and remove clipboards
+
 ### GUI Usage
 *Use `clipboards.py view` to open the GUI*
 * Click on clipboard to switch to it (auto close feature mentioned below)
@@ -64,15 +71,31 @@ Command -> `clipboards.py switch 3` : Switching to a clipboard that doesn't exis
 * Display HTML as plain text instead of rendering it in the GUI - found in .json:html_as_plain_text
 * Opacity of GUI - found in .json:opacity
 
-### Features
-* Dark stylesheet and transparency
-* Dynamically displays contents of clipboards
-* Will save current clipboard on startup (so you can see what the state it would be if it is switched)
-* Can view all clipboard contents easily
-* Easily add and remove clipboards
-
 ## Thanks to
 * [Michael Robertson](https://github.com/MBRobertson) for adding file support.
 
 ## Notes
 I have included RunGUI.vbs to be attached to a hot key so the GUI can easily be opened.
+
+## TODO
+ - Re-map storage to a sqlite3 database
+    - [clipboard (int), type (int), value (bytes)]
+    - BLOB for bytes
+ - Improve getting clipboard
+    - http://timgolden.me.uk/pywin32-docs/win32clipboard.html
+ - Replace the refresh with a settings button
+ - Migrate settings to the database
+ - Put closing the clipboard in a finally so it always occurs
+ - Bug: first right click -> view will not open view window (need to pre-create again?)
+ - Convert to package format
+    - Add setup.py
+    - License
+    - PyPI?
+
+```python
+win32clipboard.OpenClipboard()
+format1 = win32clipboard.EnumClipboardFormats()
+obj = win32clipboard.GetClipboardData(format1)
+print (type(obj))
+win32clipboard.CloseClipboard()
+```
