@@ -1,17 +1,21 @@
 import win32clipboard
 
-
+CF_IMAGES = win32clipboard.CF_DIBV5
+CF_FILES = 49376
 CF_HTML = win32clipboard.RegisterClipboardFormat("HTML Format")
+CF_UNICODE_TEXT = win32clipboard.CF_UNICODETEXT
 CF_RTF = win32clipboard.RegisterClipboardFormat("Rich Text Format")
+CF_PLAIN_TEXT = win32clipboard.CF_TEXT
 
+# Store the supported formats in order they must be read in
 SUPPORTED_CF = [
     # 49384, # 49384: Focus on publisher items # TODO Find something that won't influence the rest - we already had it?
-    win32clipboard.CF_DIBV5, # 17: Images
-    49376, # 49376: Files/Folders
+    CF_IMAGES, # 17: Images
+    CF_FILES, # 49376: Files/Folders
     CF_HTML, # 49384: HTML
-    win32clipboard.CF_UNICODETEXT, # 13: Unicode Text
+    CF_UNICODE_TEXT, # 13: Unicode Text
     CF_RTF, # 49285: Rich text
-    win32clipboard.CF_TEXT # 1: Text
+    CF_PLAIN_TEXT # 1: Text
 ]
 
 
