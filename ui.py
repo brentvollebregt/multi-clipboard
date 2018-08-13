@@ -2,6 +2,9 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import sys
 import clipboard
 
+GRID_SPACING = 5
+CLIPBOARD_LABEL_SIZE = 130
+
 
 class ClipboardSelector(QtWidgets.QWidget):
 
@@ -11,32 +14,48 @@ class ClipboardSelector(QtWidgets.QWidget):
         super().__init__()
         self.db_manager = db_mgr
 
+        # Setup window
+        self.setWindowTitle('Multi-Clipboard')
+        self.setWindowFlags(QtCore.Qt.FramelessWindowHint | QtCore.Qt.WindowStaysOnTopHint)
+
+        clipboard_ids = self.db_manager.get_clipboard_ids()
+
         # Calculating grid size
-        clipboards_total = len(self.db_manager.get_clipboard_ids())
+        clipboards_total = len(clipboard_ids)
         if clipboards_total < 6:
             rows = 1
             cols = clipboards_total + 1
         else:
-            rows = 100 # TODO Calculate rows needed
+            rows = int(clipboards_total / 6) + 1
             cols = 6
-
-        # Set window title and size
-        self.setWindowTitle('Multi-Clipboard')
-        self.setGeometry(10, 10, 850, 150)
-        self.setWindowFlags(QtCore.Qt.FramelessWindowHint | QtCore.Qt.WindowStaysOnTopHint)
+        self.setGeometry(
+            10,
+            10,
+            ((CLIPBOARD_LABEL_SIZE + GRID_SPACING) * cols) + GRID_SPACING,
+            ((CLIPBOARD_LABEL_SIZE + GRID_SPACING) * rows) + GRID_SPACING
+        )
 
         # Setup grid layout
         self.grid_layout = QtWidgets.QGridLayout(self)
         self.setLayout(self.grid_layout)
-        self.grid_layout.setSpacing(5)
-        self.grid_layout.setContentsMargins(5, 5, 5, 5)
+        self.grid_layout.setSpacing(GRID_SPACING)
+        self.grid_layout.setContentsMargins(GRID_SPACING, GRID_SPACING, GRID_SPACING, GRID_SPACING)
 
-        self.grid_layout.addWidget(self.create_clipboard_label('1'), 0, 0)
-        self.grid_layout.addWidget(self.create_clipboard_label('2'), 0, 1)
-        self.grid_layout.addWidget(self.create_clipboard_label('3'), 0, 2)
-        self.grid_layout.addWidget(self.create_clipboard_label('4'), 0, 3)
-        self.grid_layout.addWidget(self.create_clipboard_label('5'), 0, 4)
-        self.grid_layout.addWidget(self.create_clipboard_label('6'), 0, 5)
+        for position, _id in enumerate(clipboard_ids):
+            if position < 5:
+                # Deals with the first 5 to make space for the buttons
+                _col = position
+                _row = 0
+            else:
+                _row = int((position + 1) / 6)
+                _col = int((position + 1) % 6)
+
+            self.grid_layout.addWidget(self.create_clipboard_label(position), _row, _col)
+
+        if clipboards_total < 6:
+            self.grid_layout.addWidget(self.create_clipboard_label('BUTTONS'), 0, clipboards_total)
+        else:
+            self.grid_layout.addWidget(self.create_clipboard_label('BUTTONS'), 0, 5)
 
         self.setStyleSheet("background-color: red")
 
@@ -62,9 +81,9 @@ class ClipboardSelector(QtWidgets.QWidget):
         #     label.setText("CF_IMAGES")
         # else:
         #     label.setText("Corrupted (" + str(clipboard_id) + ')')
-        label.setText("TMP")
+        label.setText("TMP (" + str(clipboard_id) + ")")
 
-        label.setGeometry(QtCore.QRect(0, 0, 130, 130))
+        label.setGeometry(QtCore.QRect(0, 0, CLIPBOARD_LABEL_SIZE, CLIPBOARD_LABEL_SIZE))
         label.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         label.setAlignment(QtCore.Qt.AlignCenter)
         label.setWordWrap(True)
