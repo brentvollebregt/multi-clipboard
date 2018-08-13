@@ -5,7 +5,7 @@ CF_HTML = win32clipboard.RegisterClipboardFormat("HTML Format")
 CF_RTF = win32clipboard.RegisterClipboardFormat("Rich Text Format")
 
 SUPPORTED_CF = [
-    49384, # 49384: Focus on publisher items
+    # 49384, # 49384: Focus on publisher items # TODO Find something that won't influence the rest - we already had it?
     win32clipboard.CF_DIBV5, # 17: Images
     49376, # 49376: Files/Folders
     CF_HTML, # 49384: HTML

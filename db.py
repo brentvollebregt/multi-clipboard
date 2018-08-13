@@ -87,29 +87,32 @@ class DatabaseManager:
         self._close_connection()
         return next_id
 
-    def get_clipboard(self, id):
+    def get_clipboard(self, clipboard_id):
         self._open_connection()
-        self.cursor.execute('SELECT type, content FROM clipboards WHERE id = ?', (id, ))
+        self.cursor.execute('SELECT type, content FROM clipboards WHERE id = ?', (clipboard_id,))
         data = self.cursor.fetchone()
         self._close_connection()
-        if data == None:
-            return {
-                'type' : 1,
-                'content' : 'Placeholder',
-                'exists' : False
-        }
+        if data is None:
+            return None
         return {
             'type' : data['type'],
             'content' : data['content'],
             'exists': True
         }
 
-    def set_clipboard(self, id, type, content):
+    def set_clipboard(self, clipboard_id, clipboard_type, clipboard_content):
         self._open_connection()
-        self.cursor.execute('INSERT OR REPLACE INTO clipboards VALUES (?, ?, ?)', (id, type, content))
+        self.cursor.execute('INSERT OR REPLACE INTO clipboards VALUES (?, ?, ?)', (clipboard_id, clipboard_type, clipboard_content))
         self._close_connection()
 
-    def remove_clipboard(self, id):
+    def remove_clipboard(self, clipboard_id):
         self._open_connection()
-        self.cursor.execute('DELETE FROM clipboards WHERE id = ?', (id, ))
+        self.cursor.execute('DELETE FROM clipboards WHERE id = ?', (clipboard_id,))
         self._close_connection()
+
+    def get_clipboard_ids(self):
+        self._open_connection()
+        self.cursor.execute('SELECT id FROM clipboards')
+        rows = self.cursor.fetchall()
+        self._close_connection()
+        return [row['id'] for row in rows]
