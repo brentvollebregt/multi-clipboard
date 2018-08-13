@@ -10,9 +10,6 @@ class DatabaseManager:
         self.cursor.execute('SELECT COUNT(*) FROM settings')
         if self.cursor.fetchone()[0] < 1:
             self.cursor.execute('INSERT INTO settings VALUES (0, 0, 1, 1, 1, 85)')
-        self.cursor.execute('SELECT COUNT(*) FROM clipboards')
-        if self.cursor.fetchone()[0] < 1:
-            self.cursor.execute('INSERT INTO clipboards(type, content) VALUES (?, ?)', (1, 'Placeholder'))
         self._close_connection()
 
     def _open_connection(self):
