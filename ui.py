@@ -2,7 +2,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import sys
 import clipboard
 
-GRID_SPACING = 5
+GRID_SPACING = 6
 CLIPBOARD_LABEL_SIZE = 130
 BUTTONS_SPACING = 4
 
@@ -18,6 +18,16 @@ class ClipboardSelector(QtWidgets.QWidget):
         # Setup window
         self.setWindowTitle('Multi-Clipboard')
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint | QtCore.Qt.WindowStaysOnTopHint)
+        self.setStyleSheet("""
+            QMenu { border: 1px solid #000; }
+            QMenu::item { padding: 2px 20px 2px 20px; }
+            QMenu::item:selected { color: #000000; }
+            QWidget { color: #b1b1b1; background-color: #323232; }
+            QWidget:item:selected { background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #ffa02f, stop: 1 #d7801a); }
+            QLabel { border: 1px solid #b1b1b1; }
+            QLabel:hover { border: 2px solid #ffaa00; }
+        """)
+        self.setWindowOpacity(db_mgr.opacity)
 
         clipboard_ids = self.db_manager.get_clipboard_ids()
 
@@ -58,7 +68,7 @@ class ClipboardSelector(QtWidgets.QWidget):
         else:
             self.grid_layout.addLayout(self.create_buttons(), 0, 5)
 
-        self.setStyleSheet("background-color: red")
+        # self.setStyleSheet("background-color: red")
 
         self.centre()
         self.show()
@@ -89,7 +99,7 @@ class ClipboardSelector(QtWidgets.QWidget):
         label.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         label.setAlignment(QtCore.Qt.AlignCenter)
         label.setWordWrap(True)
-        label.setStyleSheet('background-color: blue')
+        # label.setStyleSheet('background-color: blue')
         return label
 
     def create_buttons(self):
@@ -103,7 +113,7 @@ class ClipboardSelector(QtWidgets.QWidget):
         label_add = QtWidgets.QLabel()
         label_add.setGeometry(QtCore.QRect(0, 0, label_size, label_size))
         label_add.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        label_add.setStyleSheet('background-color: blue')
+        # label_add.setStyleSheet('background-color: blue')
         icon = QtGui.QPixmap('images/add.png')
         icon = icon.scaled(label_size, label_size, QtCore.Qt.KeepAspectRatio)
         label_add.setPixmap(icon)
@@ -112,7 +122,7 @@ class ClipboardSelector(QtWidgets.QWidget):
         label_settings = QtWidgets.QLabel()
         label_settings.setGeometry(QtCore.QRect(0, 0, label_size, label_size))
         label_settings.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        label_settings.setStyleSheet('background-color: blue')
+        # label_settings.setStyleSheet('background-color: blue')
         icon = QtGui.QPixmap('images/settings.png')
         icon = icon.scaled(label_size, label_size, QtCore.Qt.KeepAspectRatio)
         label_settings.setPixmap(icon)
@@ -121,7 +131,7 @@ class ClipboardSelector(QtWidgets.QWidget):
         label_trash = QtWidgets.QLabel()
         label_trash.setGeometry(QtCore.QRect(0, 0, label_size, label_size))
         label_trash.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        label_trash.setStyleSheet('background-color: blue')
+        # label_trash.setStyleSheet('background-color: blue')
         icon = QtGui.QPixmap('images/delete.png')
         icon = icon.scaled(label_size, label_size, QtCore.Qt.KeepAspectRatio)
         label_trash.setPixmap(icon)
@@ -130,7 +140,7 @@ class ClipboardSelector(QtWidgets.QWidget):
         label_close = QtWidgets.QLabel()
         label_close.setGeometry(QtCore.QRect(0, 0, label_size, label_size))
         label_close.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        label_close.setStyleSheet('background-color: blue')
+        # label_close.setStyleSheet('background-color: blue')
         icon = QtGui.QPixmap('images/close.png')
         icon = icon.scaled(label_size, label_size, QtCore.Qt.KeepAspectRatio)
         label_close.setPixmap(icon)
