@@ -54,6 +54,11 @@ To run the GUI, simply run the ```multi_clipboard.py``` script with no parameter
      - Runs in a new thread so the main can die and this can move to the background
      - Optional import for pynput
         - Notify the user if not installed
+     - Add autostart option
+        - Put in settings to toggle
+        - "Listen on Startup"
+        - Put a vbs script in startup folder
+        - Remove if toggled off
  - Convert to package format
     - Add setup.py
     - License

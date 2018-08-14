@@ -13,6 +13,11 @@ def stop_listener():
     pass
 
 
+def is_listener_running():
+    # Return a bool of whether the listener is currently running
+    pass
+
+
 class Listener:
 
     keys_pressed = set()
