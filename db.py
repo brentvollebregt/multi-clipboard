@@ -1,5 +1,4 @@
 import sqlite3
-# TODO Add 'preview' column to show the user a summary of the data (for things like HTML, they no longer show up)
 
 
 class DatabaseManager:

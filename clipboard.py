@@ -57,7 +57,10 @@ def get_clipboard_preview():
     if preview_type == 0:
         return ''
     win32clipboard.OpenClipboard()
-    contents = win32clipboard.GetClipboardData(preview_type)
+    try:
+        contents = win32clipboard.GetClipboardData(preview_type)
+    except:
+        contents = "Can't get preview"
     win32clipboard.CloseClipboard()
     return str(contents)
 
@@ -70,7 +73,11 @@ def set_clipboard(_type, _data):
     win32clipboard.CloseClipboard()
 
 
+# TESTING
+
+
 def _test():
+    """ A test method to get all the clipboard formats for the current clipboard """
     win32clipboard.OpenClipboard()
     data = {}
     last_format = 0

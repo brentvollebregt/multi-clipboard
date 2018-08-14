@@ -4,6 +4,7 @@ import clipboard
 
 GRID_SPACING = 5
 CLIPBOARD_LABEL_SIZE = 130
+BUTTONS_SPACING = 4
 
 
 class ClipboardSelector(QtWidgets.QWidget):
@@ -36,7 +37,7 @@ class ClipboardSelector(QtWidgets.QWidget):
         )
 
         # Setup grid layout
-        self.grid_layout = QtWidgets.QGridLayout(self)
+        self.grid_layout = QtWidgets.QGridLayout()
         self.setLayout(self.grid_layout)
         self.grid_layout.setSpacing(GRID_SPACING)
         self.grid_layout.setContentsMargins(GRID_SPACING, GRID_SPACING, GRID_SPACING, GRID_SPACING)
@@ -53,9 +54,9 @@ class ClipboardSelector(QtWidgets.QWidget):
             self.grid_layout.addWidget(self.create_clipboard_label(_id), _row, _col)
 
         if clipboards_total < 6:
-            self.grid_layout.addWidget(self.create_clipboard_label('BUTTONS'), 0, clipboards_total)
+            self.grid_layout.addLayout(self.create_buttons(), 0, clipboards_total)
         else:
-            self.grid_layout.addWidget(self.create_clipboard_label('BUTTONS'), 0, 5)
+            self.grid_layout.addLayout(self.create_buttons(), 0, 5)
 
         self.setStyleSheet("background-color: red")
 
@@ -92,7 +93,36 @@ class ClipboardSelector(QtWidgets.QWidget):
         return label
 
     def create_buttons(self):
-        pass
+        layout = QtWidgets.QGridLayout()
+        layout.setGeometry(QtCore.QRect(0, 0, CLIPBOARD_LABEL_SIZE, CLIPBOARD_LABEL_SIZE))
+        layout.setSpacing(BUTTONS_SPACING)
+        layout.setContentsMargins(0, 0, 0, 0)
+
+        label_size = (CLIPBOARD_LABEL_SIZE - BUTTONS_SPACING) / 2
+
+        label_add = QtWidgets.QLabel()
+        label_add.setGeometry(QtCore.QRect(0, 0, label_size, label_size))
+        label_add.setText('Add')
+        label_add.setStyleSheet('background-color: blue')
+        label_settings = QtWidgets.QLabel()
+        label_settings.setGeometry(QtCore.QRect(0, 0, label_size, label_size))
+        label_settings.setText('Settings')
+        label_settings.setStyleSheet('background-color: blue')
+        label_trash = QtWidgets.QLabel()
+        label_trash.setGeometry(QtCore.QRect(0, 0, label_size, label_size))
+        label_trash.setText('Trash')
+        label_trash.setStyleSheet('background-color: blue')
+        label_close = QtWidgets.QLabel()
+        label_close.setGeometry(QtCore.QRect(0, 0, label_size, label_size))
+        label_close.setText('Close')
+        label_close.setStyleSheet('background-color: blue')
+
+        layout.addWidget(label_add, 0, 0)
+        layout.addWidget(label_settings, 0, 1)
+        layout.addWidget(label_trash, 1, 0)
+        layout.addWidget(label_close, 1, 1)
+
+        return layout
 
     def centre(self):
         # Thanks to https://stackoverflow.com/questions/20243637/pyqt4-center-window-on-active-screen
