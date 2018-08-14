@@ -110,7 +110,7 @@ class ClipboardSelector(QtWidgets.QWidget):
             label.setStyleSheet("""QLabel {border: 1px solid #ffaa00;} QLabel:hover {border: 2px solid #ffaa00;}""")
 
         # On click
-        label_click = self.LabelClick(clipboard_id, self)
+        label_click = self.LabelClick(clipboard_id, self, label)
         label.mousePressEvent = label_click.on_click
 
         return label
@@ -173,9 +173,10 @@ class ClipboardSelector(QtWidgets.QWidget):
 
     class LabelClick:
 
-        def __init__(self, clipboard_id, parent):
+        def __init__(self, clipboard_id, parent, label):
             self.clipboard_id = clipboard_id
             self.parent = parent
+            self.label = label
 
         def on_click(self, event):
             if event.button() == 1: # Check it is a right click
@@ -184,23 +185,21 @@ class ClipboardSelector(QtWidgets.QWidget):
                     self.parent.close()
                 else:
                     self.parent.refresh()
-
-    class LabelContextMenu:
-
-        ACTION_REMOVE = 'remove'
-        ACTION_SWITCH = 'switch'
-
-        def __init__(self, clipboard_id, label, parent):
-            self.clipboard_id = clipboard_id
-            self.label = label
-            self.parent = parent
-            self.menu = QtWidgets.QMenu()
-            self.menu.addAction(QtWidgets.QAction('remove'))
-            self.menu.addSeparator()
-            self.menu.addAction(QtWidgets.QAction('switch'))
-
-        def on_menu_call(self, point):
-            pass
+            elif event.button() == 2:
+                menu = QtWidgets.QMenu(self.label)
+                remove_action = QtWidgets.QAction('remove', self.label)
+                menu.addAction(remove_action)
+                menu.addSeparator()
+                switch_action = QtWidgets.QAction('switch', self.label)
+                menu.addAction(switch_action)
+                action = menu.exec_(self.label.mapToGlobal(event.pos()))
+                if action is not None:
+                    if action == remove_action:
+                        utils.delete_stored_clipboards(self.parent.db_manager, [self.clipboard_id])
+                        self.parent.refresh()
+                    elif action == switch_action:
+                        utils.set_clipboard(self.parent.db_manager, self.clipboard_id)
+                        self.parent.refresh()
 
 
 class SettingsWindow:
