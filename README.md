@@ -48,6 +48,12 @@ To run the GUI, simply run the ```multi_clipboard.py``` script with no parameter
 ## Things that still are being done
  - Add new image to README
  - Add listener running on a server to wait for [Ctrl + Windows + C]
+     - Add notes to readme for starting and stopping (--start-listener)
+     - Put start/stop button in GUI
+     - Make sure two aren't running at the same time (can use a lock file and sockets: port in .running)
+     - Runs in a new thread so the main can die and this can move to the background
+     - Optional import for pynput
+        - Notify the user if not installed
  - Convert to package format
     - Add setup.py
     - License
