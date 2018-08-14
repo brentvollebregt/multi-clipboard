@@ -4,10 +4,12 @@ import threading
 
 
 def start_listener():
+    # Call a thread every time so it will keep running no matter where it came from
     pass
 
 
 def stop_listener():
+    # Try and read the lock file with the port in it. Tell the port to stop if it exists
     pass
 
 
@@ -16,6 +18,8 @@ class Listener:
     keys_pressed = set()
 
     def __init__(self):
+        # Create a thread for the listener and then start the server
+        # Hold onto the listener object so we can stop it anytime (server kills listener then ends itself)
         pass
 
     def server(self):
@@ -32,5 +36,4 @@ class Listener:
 
 
 if __name__ == "__main__":
-    # TODO Start the listener
-    pass
+    start_listener()

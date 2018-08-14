@@ -6,6 +6,7 @@ import utils
 GRID_SPACING = 6
 CLIPBOARD_LABEL_SIZE = 130
 BUTTONS_SPACING = 4
+BUTTON_SIZE_REDUCTION = 15
 
 
 class ClipboardSelector(QtWidgets.QWidget):
@@ -15,7 +16,7 @@ class ClipboardSelector(QtWidgets.QWidget):
         self.db_manager = db_mgr
 
         # Setup window
-        self.setWindowTitle('Multi-Clipboard')
+        self.setWindowTitle('Multi Clipboard')
         if self.db_manager.stay_on_top and self.db_manager.disable_frame:
             self.setWindowFlags(QtCore.Qt.FramelessWindowHint | QtCore.Qt.WindowStaysOnTopHint)
         elif self.db_manager.stay_on_top:
@@ -133,11 +134,12 @@ class ClipboardSelector(QtWidgets.QWidget):
 
         for button in button_data:
             tmp_btn = QtWidgets.QLabel()
-            tmp_btn.setGeometry(QtCore.QRect(0, 0, label_size, label_size))
+            tmp_btn.setFixedSize(label_size, label_size)
             tmp_btn.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
             icon = QtGui.QPixmap(button[0])
-            icon = icon.scaled(label_size, label_size, QtCore.Qt.KeepAspectRatio)
+            icon = icon.scaled(label_size - BUTTON_SIZE_REDUCTION, label_size - BUTTON_SIZE_REDUCTION, QtCore.Qt.KeepAspectRatio)
             tmp_btn.setPixmap(icon)
+            tmp_btn.setAlignment(QtCore.Qt.AlignCenter)
             tmp_btn.mousePressEvent = button[1]
             layout.addWidget(tmp_btn, button[2], button[3])
 
