@@ -99,7 +99,7 @@ class ClipboardSelector(QtWidgets.QWidget):
         label.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         label.setAlignment(QtCore.Qt.AlignCenter)
         label.setWordWrap(True)
-        # label.setStyleSheet('background-color: blue')
+
         return label
 
     def create_buttons(self):
@@ -108,48 +108,26 @@ class ClipboardSelector(QtWidgets.QWidget):
         layout.setSpacing(BUTTONS_SPACING)
         layout.setContentsMargins(0, 0, 0, 0)
 
+        # Size of each label with spacing considered
         label_size = (CLIPBOARD_LABEL_SIZE - BUTTONS_SPACING) / 2
 
-        label_add = QtWidgets.QLabel()
-        label_add.setGeometry(QtCore.QRect(0, 0, label_size, label_size))
-        label_add.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        # label_add.setStyleSheet('background-color: blue')
-        icon = QtGui.QPixmap('images/add.png')
-        icon = icon.scaled(label_size, label_size, QtCore.Qt.KeepAspectRatio)
-        label_add.setPixmap(icon)
-        label_add.mousePressEvent = self.add_button
+        # Data to setup buttons to stop repeating lines [img, onclick, row, col]
+        button_data = [
+            ['images/add.png', self.add_button, 0, 0],
+            ['images/settings.png', self.settings_button, 0, 1],
+            ['images/delete.png', self.clear_button, 1, 0],
+            ['images/close.png', self.close_button, 1, 1]
+        ]
 
-        label_settings = QtWidgets.QLabel()
-        label_settings.setGeometry(QtCore.QRect(0, 0, label_size, label_size))
-        label_settings.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        # label_settings.setStyleSheet('background-color: blue')
-        icon = QtGui.QPixmap('images/settings.png')
-        icon = icon.scaled(label_size, label_size, QtCore.Qt.KeepAspectRatio)
-        label_settings.setPixmap(icon)
-        label_settings.mousePressEvent = self.settings_button
-
-        label_trash = QtWidgets.QLabel()
-        label_trash.setGeometry(QtCore.QRect(0, 0, label_size, label_size))
-        label_trash.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        # label_trash.setStyleSheet('background-color: blue')
-        icon = QtGui.QPixmap('images/delete.png')
-        icon = icon.scaled(label_size, label_size, QtCore.Qt.KeepAspectRatio)
-        label_trash.setPixmap(icon)
-        label_trash.mousePressEvent = self.clear_button
-
-        label_close = QtWidgets.QLabel()
-        label_close.setGeometry(QtCore.QRect(0, 0, label_size, label_size))
-        label_close.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        # label_close.setStyleSheet('background-color: blue')
-        icon = QtGui.QPixmap('images/close.png')
-        icon = icon.scaled(label_size, label_size, QtCore.Qt.KeepAspectRatio)
-        label_close.setPixmap(icon)
-        label_close.mousePressEvent = self.close_button
-
-        layout.addWidget(label_add, 0, 0)
-        layout.addWidget(label_settings, 0, 1)
-        layout.addWidget(label_trash, 1, 0)
-        layout.addWidget(label_close, 1, 1)
+        for button in button_data:
+            tmp_btn = QtWidgets.QLabel()
+            tmp_btn.setGeometry(QtCore.QRect(0, 0, label_size, label_size))
+            tmp_btn.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+            icon = QtGui.QPixmap(button[0])
+            icon = icon.scaled(label_size, label_size, QtCore.Qt.KeepAspectRatio)
+            tmp_btn.setPixmap(icon)
+            tmp_btn.mousePressEvent = button[1]
+            layout.addWidget(tmp_btn, button[2], button[3])
 
         return layout
 
@@ -165,7 +143,8 @@ class ClipboardSelector(QtWidgets.QWidget):
         print ('Add clipboard')
 
     def close_button(self, event):
-        print('Close')
+        if event.button() == 1:
+            self.close()
 
     def clear_button(self, event):
         print('Clear all clipboards')
