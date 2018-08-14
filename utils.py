@@ -38,7 +38,7 @@ def store_clipboard(db_manager):
 def set_clipboard(db_manager, clipboard_id):
     """ Puts a stored clipboard on the clipboard """
     requested_clipboard = db_manager.get_clipboard(clipboard_id)
-    clipboard.set_clipboard(requested_clipboard['type'], requested_clipboard['content'])
+    clipboard.set_clipboard(requested_clipboard['type'], requested_clipboard['content'], requested_clipboard['preview'])
     db_manager.current_clipboard = clipboard_id
 
 

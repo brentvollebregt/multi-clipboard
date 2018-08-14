@@ -73,11 +73,14 @@ def get_clipboard_preview():
     return str(contents)
 
 
-def set_clipboard(_type, _data):
+def set_clipboard(_type, _data, preview_extra):
     """ Set the clipboard passing a format (type) and data """
     win32clipboard.OpenClipboard()
     win32clipboard.EmptyClipboard()
     win32clipboard.SetClipboardData(_type, _data)
+    # Preview extra is so we can keep reading the preview later - we lose clipboard data with html
+    if CF_PREVIEW_RELATIONS[_type] != 0:
+        win32clipboard.SetClipboardData(CF_PREVIEW_RELATIONS[_type], preview_extra)
     win32clipboard.CloseClipboard()
 
 

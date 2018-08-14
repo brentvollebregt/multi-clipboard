@@ -10,8 +10,6 @@ BUTTONS_SPACING = 4
 
 class ClipboardSelector(QtWidgets.QWidget):
 
-    # TODO ClipboardSelector
-
     def __init__(self, db_mgr):
         super().__init__()
         self.db_manager = db_mgr
@@ -201,11 +199,10 @@ class ClipboardSelector(QtWidgets.QWidget):
                         utils.set_clipboard(self.parent.db_manager, self.clipboard_id)
                         self.parent.refresh()
 
-
-class SettingsWindow:
-    # TODO SettingsWindow
-    def __init__(self):
-        pass
+    class SettingsWindow:
+        # TODO SettingsWindow
+        def __init__(self, parent):
+            self.parent = parent
 
 
 class UnsupportedClipboardWarning:
