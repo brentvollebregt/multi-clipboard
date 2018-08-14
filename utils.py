@@ -1,5 +1,6 @@
 import clipboard
 import argparse
+import ui
 
 
 def check_clear_arg(value):
@@ -29,6 +30,8 @@ def delete_stored_clipboards(db_manager, clipboard_ids):
 def store_clipboard(db_manager):
     """ Stores the users current clipboard into the current clipboard in the database """
     user_clipboard_type = clipboard.get_clipboard_type()
+    if user_clipboard_type is None:
+        ui.show_unsupported_clipboard_warning()
     user_clipboard_contents = clipboard.get_clipboard()
     user_clipboard_preview = clipboard.get_clipboard_preview()
     current_clipboard_id = db_manager.current_clipboard

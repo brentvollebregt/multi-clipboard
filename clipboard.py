@@ -82,25 +82,3 @@ def set_clipboard(_type, _data, preview_extra):
     if CF_PREVIEW_RELATIONS[_type] != 0:
         win32clipboard.SetClipboardData(CF_PREVIEW_RELATIONS[_type], preview_extra)
     win32clipboard.CloseClipboard()
-
-
-# TESTING
-
-
-def _test():
-    """ A test method to get all the clipboard formats for the current clipboard """
-    win32clipboard.OpenClipboard()
-    data = {}
-    last_format = 0
-    while 1:
-        next_format = win32clipboard.EnumClipboardFormats(last_format)
-        if 0 == next_format:
-            break
-        else:
-            try:
-                data[next_format] = win32clipboard.GetClipboardData(next_format)
-            except:
-                pass
-            last_format = next_format
-    win32clipboard.CloseClipboard()
-    return data

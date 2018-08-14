@@ -102,8 +102,6 @@ class ClipboardSelector(QtWidgets.QWidget):
         label.setWordWrap(True)
         label.setAlignment(QtCore.Qt.AlignCenter)
         label.setTextInteractionFlags(QtCore.Qt.TextSelectableByMouse)
-        # if self.db_manager.html_as_plain_text:
-        #     label.setTextFormat(QtCore.Qt.PlainText) TODO If we have issues
         label.setToolTip("Clipboard: " + str(clipboard_id))
 
         # If this is the currently selected clipboard, show the user
@@ -307,12 +305,6 @@ class ClipboardSelector(QtWidgets.QWidget):
                 self.close()
 
 
-class UnsupportedClipboardWarning:
-    # TODO UnsupportedClipboardWarning
-    def __init__(self):
-        pass
-
-
 def show_clipboard_selector(db_manager):
     app = QtWidgets.QApplication(sys.argv)
     cs = ClipboardSelector(db_manager)
@@ -320,4 +312,16 @@ def show_clipboard_selector(db_manager):
 
 
 def show_unsupported_clipboard_warning():
-    print("UnsupportedClipboardWarning placeholder")
+    app = QtWidgets.QApplication([])
+    msg = QtWidgets.QMessageBox()
+    msg.setIcon(QtWidgets.QMessageBox.Critical)
+    msg.setText(
+        'The current item on your clipboard is not supported.\n'
+        'The application is unable to detect the type of the clipboard so it must stop.\n\n'
+        'No data has been lost. Changing the contents of the clipboard will fix this'
+    )
+    msg.setWindowTitle("Fatal Error")
+    msg.show()
+    msg.raise_()
+    msg.activateWindow()
+    app.exec_()
