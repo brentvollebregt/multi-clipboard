@@ -271,20 +271,23 @@ class ClipboardSelector(QtWidgets.QWidget):
         def set_values(self):
             self.opacity_spin.setValue(self.parent.db_manager.opacity * 100)
 
-            if self.parent.db_manager.close_on_select:
-                self.close_on_select_button.setStyleSheet("QLabel {border: 1px solid #ffaa00; font: 8pt; color: #ffaa00;} QLabel:hover {border: 2px solid #ffaa00; color: #ffaa00;}")
-            else:
-                self.close_on_select_button.setStyleSheet("QLabel {border: 1px solid #ffffff; font: 8pt; color: white;} QLabel:hover {border: 2px solid #ffaa00; color: #ffaa00;}")
+            settings_label_pairs = [
+                [self.parent.db_manager.close_on_select, self.close_on_select_button],
+                [self.parent.db_manager.stay_on_top, self.stay_on_top_button],
+                [self.parent.db_manager.disable_frame, self.disable_frame_button],
+            ]
 
-            if self.parent.db_manager.stay_on_top:
-                self.stay_on_top_button.setStyleSheet("QLabel {border: 1px solid #ffaa00; font: 8pt; color: #ffaa00;} QLabel:hover {border: 2px solid #ffaa00; color: #ffaa00;}")
-            else:
-                self.stay_on_top_button.setStyleSheet("QLabel {border: 1px solid #ffffff; font: 8pt; color: white;} QLabel:hover {border: 2px solid #ffaa00; color: #ffaa00;}")
-
-            if self.parent.db_manager.disable_frame:
-                self.disable_frame_button.setStyleSheet("QLabel {border: 1px solid #ffaa00; font: 8pt; color: #ffaa00;} QLabel:hover {border: 2px solid #ffaa00; color: #ffaa00;}")
-            else:
-                self.disable_frame_button.setStyleSheet("QLabel {border: 1px solid #ffffff; font: 8pt; color: white;} QLabel:hover {border: 2px solid #ffaa00; color: #ffaa00;}")
+            for pair in settings_label_pairs:
+                if pair[0]:
+                    pair[1].setStyleSheet(
+                        'QLabel {border: 1px solid #ffaa00; font: 8pt; color: #ffaa00;}'
+                        'QLabel:hover {border: 2px solid #ffaa00; color: #ffaa00;}'
+                    )
+                else:
+                    pair[1].setStyleSheet(
+                        'QLabel {border: 1px solid #ffffff; font: 8pt; color: white;}'
+                        'QLabel:hover {border: 2px solid #ffaa00; color: #ffaa00;}'
+                    )
 
         def close_on_select_button_click(self, e):
             self.parent.db_manager.close_on_select = not self.parent.db_manager.close_on_select
