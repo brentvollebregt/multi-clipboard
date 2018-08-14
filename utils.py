@@ -24,7 +24,8 @@ def delete_stored_clipboards(db_manager, clipboard_ids):
     # If there are no more clipboards left, set the current clipboard to 0 and put the users clipboard into it
     if len(db_manager.get_clipboard_ids()) < 1:
         db_manager.current_clipboard = 0
-        store_clipboard(db_manager)
+
+    store_clipboard(db_manager)
 
 
 def store_clipboard(db_manager):
