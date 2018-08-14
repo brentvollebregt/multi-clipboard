@@ -22,7 +22,7 @@ You can install this project using this repository by following these steps:
 2. Open cmd/terminal and cd to the project
 3. Execute ```pip install -r requirements.txt``` and [install this if pywin32 doesn't install](https://sourceforge.net/projects/pywin32/files/pywin32/)
 
-To run the GUI, simply run the ```multi_clipboard.py``` script with no parameters.
+To run the GUI, simply run the ```multi_clipboard.py``` script with no parameters. Alternatively use ```run.vbs``` to open the GUI with no console (can be used for key shortcuts).
 
 ### GUI Usage
 * Click on clipboard to switch to it (will close automatically on selection by default)
