@@ -1,4 +1,6 @@
+import io
 import win32clipboard
+from PIL import ImageGrab, Image
 
 CF_IMAGES = win32clipboard.CF_DIBV5
 CF_FILES = 49376
@@ -55,7 +57,13 @@ def get_clipboard_preview():
     clipboard_type = get_clipboard_type()
     preview_type = CF_PREVIEW_RELATIONS[clipboard_type]
     if preview_type == 0:
-        return ''
+        if clipboard_type == CF_IMAGES:
+            img = ImageGrab.grabclipboard()
+            data = io.BytesIO()
+            img.save(data, format='JPEG')
+            return data.getvalue()
+        else:
+            return ''
     win32clipboard.OpenClipboard()
     try:
         contents = win32clipboard.GetClipboardData(preview_type)

@@ -75,30 +75,40 @@ class ClipboardSelector(QtWidgets.QWidget):
 
     def create_clipboard_label(self, clipboard_id):
         label = QtWidgets.QLabel()
+        label.setFixedSize(CLIPBOARD_LABEL_SIZE, CLIPBOARD_LABEL_SIZE)
+        label.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         label.clipboard_id = clipboard_id
+
+        # Get the clipboard and check if it is valid
         clipboard_contents = self.db_manager.get_clipboard(clipboard_id)
         if clipboard_contents is None:
-            clipboard_contents = {'type' : 'corrupted', 'content' : ''}
+            clipboard_contents = {'type' : -1, 'content' : '', 'preview' : 'No Preview'}
 
-        if clipboard_contents['type'] == clipboard.CF_PLAIN_TEXT:
-            label.setText('CF_PLAIN_TEXT (' + str(clipboard_id) + ')')
-        elif clipboard_contents['type'] == clipboard.CF_RTF:
-            label.setText('CF_RTF (' + str(clipboard_id) + ')')
-        elif clipboard_contents['type'] == clipboard.CF_UNICODE_TEXT:
-            label.setText('CF_UNICODE_TEXT (' + str(clipboard_id) + ')')
-        elif clipboard_contents['type'] == clipboard.CF_HTML:
-            label.setText('CF_HTML (' + str(clipboard_id) + ')')
-        elif clipboard_contents['type'] == clipboard.CF_FILES:
-            label.setText('CF_FILES (' + str(clipboard_id) + ')')
+        # Decide on what is being shown in the clipboard
+        if clipboard.CF_PREVIEW_RELATIONS[clipboard_contents['type']] != 0:
+            label.setText(clipboard_contents['preview'])
+            label.setMargin(3)
         elif clipboard_contents['type'] == clipboard.CF_IMAGES:
-            label.setText('CF_IMAGES (' + str(clipboard_id) + ')')
+            image = QtGui.QPixmap()
+            image.loadFromData(clipboard_contents['preview'], 'JPEG')
+            image = image.scaled(CLIPBOARD_LABEL_SIZE, CLIPBOARD_LABEL_SIZE, QtCore.Qt.KeepAspectRatio)
+            label.setPixmap(image)
         else:
-            label.setText('Corrupted (' + str(clipboard_id) + ')')
+            label.setText('Preview not avaiable')
+            label.setMargin(3)
 
-        label.setGeometry(QtCore.QRect(0, 0, CLIPBOARD_LABEL_SIZE, CLIPBOARD_LABEL_SIZE))
-        label.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        # Formatting
         label.setAlignment(QtCore.Qt.AlignCenter)
         label.setWordWrap(True)
+        label.setAlignment(QtCore.Qt.AlignCenter)
+        label.setTextInteractionFlags(QtCore.Qt.TextSelectableByMouse)
+        if self.db_manager.html_as_plain_text:
+            label.setTextFormat(QtCore.Qt.PlainText)
+        label.setToolTip("Clipboard: " + str(clipboard_id))
+
+        # If this is the currently selected clipboard, show the user
+        if self.db_manager.current_clipboard == clipboard_id:
+            label.setStyleSheet("""QLabel {border: 1px solid #ffaa00;} QLabel:hover {border: 2px solid #ffaa00;}""")
 
         return label
 
