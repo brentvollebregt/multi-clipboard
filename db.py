@@ -6,10 +6,10 @@ class DatabaseManager:
     def __init__(self):
         self._open_connection()
         self.cursor.execute('CREATE TABLE IF NOT EXISTS clipboards (id INTEGER PRIMARY KEY, type INTEGER, content BLOB, preview BLOB);')
-        self.cursor.execute('CREATE TABLE IF NOT EXISTS settings (id INTEGER PRIMARY KEY, current_clipboard INTEGER, close_on_select INTEGER, html_as_plain_text INTEGER, stay_on_top INTEGER, opacity INTEGER);')
+        self.cursor.execute('CREATE TABLE IF NOT EXISTS settings (id INTEGER PRIMARY KEY, current_clipboard INTEGER, close_on_select INTEGER, stay_on_top INTEGER, opacity INTEGER, disable_frame INTEGER);')
         self.cursor.execute('SELECT COUNT(*) FROM settings')
         if self.cursor.fetchone()[0] < 1:
-            self.cursor.execute('INSERT INTO settings VALUES (0, 0, 1, 1, 1, 85)')
+            self.cursor.execute('INSERT INTO settings VALUES (0, 0, 1, 1, 85, 1)')
         self._close_connection()
 
     def _open_connection(self):
@@ -52,14 +52,6 @@ class DatabaseManager:
         self. _set_setting('close_on_select', int(value))
 
     @property
-    def html_as_plain_text(self):
-        return bool(self._get_setting('html_as_plain_text'))
-
-    @html_as_plain_text.setter
-    def html_as_plain_text(self, value):
-        self._set_setting('html_as_plain_text', int(value))
-
-    @property
     def stay_on_top(self):
         return bool(self._get_setting('stay_on_top'))
 
@@ -74,6 +66,14 @@ class DatabaseManager:
     @opacity.setter
     def opacity(self, value):
         self._set_setting('opacity', value * 100)
+
+    @property
+    def disable_frame(self):
+        return bool(self._get_setting('disable_frame'))
+
+    @disable_frame.setter
+    def disable_frame(self, value):
+        self._set_setting('disable_frame', int(value))
 
     # Clipboards
 

@@ -16,7 +16,12 @@ class ClipboardSelector(QtWidgets.QWidget):
 
         # Setup window
         self.setWindowTitle('Multi-Clipboard')
-        self.setWindowFlags(QtCore.Qt.FramelessWindowHint | QtCore.Qt.WindowStaysOnTopHint)
+        if self.db_manager.stay_on_top and self.db_manager.disable_frame:
+            self.setWindowFlags(QtCore.Qt.FramelessWindowHint | QtCore.Qt.WindowStaysOnTopHint)
+        elif self.db_manager.stay_on_top:
+            self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
+        elif self.db_manager.disable_frame:
+            self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         self.setStyleSheet("""
             QMenu { border: 1px solid #000; }
             QMenu::item { padding: 2px 20px 2px 20px; }
@@ -38,9 +43,7 @@ class ClipboardSelector(QtWidgets.QWidget):
         else:
             rows = int(clipboards_total / 6) + 1
             cols = 6
-        self.setGeometry(
-            10,
-            10,
+        self.setFixedSize(
             ((CLIPBOARD_LABEL_SIZE + GRID_SPACING) * cols) + GRID_SPACING,
             ((CLIPBOARD_LABEL_SIZE + GRID_SPACING) * rows) + GRID_SPACING
         )
@@ -99,8 +102,8 @@ class ClipboardSelector(QtWidgets.QWidget):
         label.setWordWrap(True)
         label.setAlignment(QtCore.Qt.AlignCenter)
         label.setTextInteractionFlags(QtCore.Qt.TextSelectableByMouse)
-        if self.db_manager.html_as_plain_text:
-            label.setTextFormat(QtCore.Qt.PlainText)
+        # if self.db_manager.html_as_plain_text:
+        #     label.setTextFormat(QtCore.Qt.PlainText) TODO If we have issues
         label.setToolTip("Clipboard: " + str(clipboard_id))
 
         # If this is the currently selected clipboard, show the user
@@ -167,7 +170,8 @@ class ClipboardSelector(QtWidgets.QWidget):
         self.refresh()
 
     def settings_button(self, event):
-        print('Open Settings')
+        settings_window = self.SettingsWindow(self)
+        settings_window.show()
 
     class LabelClick:
 
@@ -199,10 +203,108 @@ class ClipboardSelector(QtWidgets.QWidget):
                         utils.set_clipboard(self.parent.db_manager, self.clipboard_id)
                         self.parent.refresh()
 
-    class SettingsWindow:
-        # TODO SettingsWindow
+    class SettingsWindow(QtWidgets.QWidget):
+
+        SETTINGS_GRID_SPACING = 4
+        SETTINGS_TILE_SIZE = 60
+
         def __init__(self, parent):
+            super().__init__()
             self.parent = parent
+
+            self.setWindowFlags(QtCore.Qt.FramelessWindowHint | QtCore.Qt.WindowStaysOnTopHint)
+            self.setStyleSheet("QWidget {color: #b1b1b1; background-color: #323232; border: 0px;}")
+            self.setWindowOpacity(1)
+
+            self.grid_layout = QtWidgets.QGridLayout()
+            self.setLayout(self.grid_layout)
+            self.grid_layout.setSpacing(self.SETTINGS_GRID_SPACING)
+            self.grid_layout.setContentsMargins(self.SETTINGS_GRID_SPACING, self.SETTINGS_GRID_SPACING, self.SETTINGS_GRID_SPACING, self.SETTINGS_GRID_SPACING)
+
+            items = 5 # Manually set how many buttons/inputs we will have
+            self.setFixedSize(
+                (items * (self.SETTINGS_GRID_SPACING + self.SETTINGS_TILE_SIZE)) + self.SETTINGS_GRID_SPACING,
+                self.SETTINGS_TILE_SIZE + (2 * self.SETTINGS_GRID_SPACING)
+            )
+
+            self.close_on_select_button = self.create_basic_button('Close on Select', self.close_on_select_button_click)
+            self.grid_layout.addWidget(self.close_on_select_button, 0, 0)
+
+            self.stay_on_top_button = self.create_basic_button('Stay on Top', self.stay_on_top_button_click)
+            self.grid_layout.addWidget(self.stay_on_top_button, 0, 1)
+
+            self.disable_frame_button = self.create_basic_button('Disable Frame', self.disable_frame_button_click)
+            self.grid_layout.addWidget(self.disable_frame_button, 0, 2)
+
+            self.opacity_spin = QtWidgets.QSpinBox()
+            self.opacity_spin.setFixedSize(self.SETTINGS_TILE_SIZE, self.SETTINGS_TILE_SIZE)
+            self.opacity_spin.setMaximum(100)
+            self.opacity_spin.setMinimum(0)
+            self.opacity_spin.setStyleSheet("QSpinBox {border: 1px solid #ffffff; font: 16pt; color: white;}")
+            self.opacity_spin.valueChanged.connect(self.opacity_edit)
+            self.grid_layout.addWidget(self.opacity_spin, 0, 3)
+
+            icon = QtGui.QPixmap('images/close.png')
+            icon = icon.scaled(self.SETTINGS_TILE_SIZE, self.SETTINGS_TILE_SIZE, QtCore.Qt.KeepAspectRatio)
+            self.close_label = QtWidgets.QLabel()
+            self.close_label.setFixedSize(self.SETTINGS_TILE_SIZE, self.SETTINGS_TILE_SIZE)
+            self.close_label.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+            self.close_label.setStyleSheet("QLabel {border: 1px solid #ffffff; font: 8pt; color: white;} QLabel:hover {border: 2px solid #ffaa00; color: #ffaa00;}")
+            self.close_label.setPixmap(icon)
+            self.close_label.setAlignment(QtCore.Qt.AlignCenter)
+            self.close_label.mousePressEvent = self.close_button_click
+            self.grid_layout.addWidget(self.close_label, 0, 4)
+
+            self.set_values()
+
+        def create_basic_button(self, text, onclick):
+            tmp_btn = QtWidgets.QLabel()
+            tmp_btn.setFixedSize(self.SETTINGS_TILE_SIZE, self.SETTINGS_TILE_SIZE)
+            tmp_btn.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+            tmp_btn.setText(text)
+            tmp_btn.setWordWrap(True)
+            tmp_btn.setMargin(3)
+            tmp_btn.setAlignment(QtCore.Qt.AlignCenter)
+            tmp_btn.mousePressEvent = onclick
+            return tmp_btn
+
+        def set_values(self):
+            self.opacity_spin.setValue(self.parent.db_manager.opacity * 100)
+
+            if self.parent.db_manager.close_on_select:
+                self.close_on_select_button.setStyleSheet("QLabel {border: 1px solid #ffaa00; font: 8pt; color: #ffaa00;} QLabel:hover {border: 2px solid #ffaa00; color: #ffaa00;}")
+            else:
+                self.close_on_select_button.setStyleSheet("QLabel {border: 1px solid #ffffff; font: 8pt; color: white;} QLabel:hover {border: 2px solid #ffaa00; color: #ffaa00;}")
+
+            if self.parent.db_manager.stay_on_top:
+                self.stay_on_top_button.setStyleSheet("QLabel {border: 1px solid #ffaa00; font: 8pt; color: #ffaa00;} QLabel:hover {border: 2px solid #ffaa00; color: #ffaa00;}")
+            else:
+                self.stay_on_top_button.setStyleSheet("QLabel {border: 1px solid #ffffff; font: 8pt; color: white;} QLabel:hover {border: 2px solid #ffaa00; color: #ffaa00;}")
+
+            if self.parent.db_manager.disable_frame:
+                self.disable_frame_button.setStyleSheet("QLabel {border: 1px solid #ffaa00; font: 8pt; color: #ffaa00;} QLabel:hover {border: 2px solid #ffaa00; color: #ffaa00;}")
+            else:
+                self.disable_frame_button.setStyleSheet("QLabel {border: 1px solid #ffffff; font: 8pt; color: white;} QLabel:hover {border: 2px solid #ffaa00; color: #ffaa00;}")
+
+        def close_on_select_button_click(self, e):
+            self.parent.db_manager.close_on_select = not self.parent.db_manager.close_on_select
+            self.set_values()
+
+        def stay_on_top_button_click(self, e):
+            self.parent.db_manager.stay_on_top = not self.parent.db_manager.stay_on_top
+            self.set_values()
+
+        def disable_frame_button_click(self, e):
+            self.parent.db_manager.disable_frame = not self.parent.db_manager.disable_frame
+            self.set_values()
+
+        def opacity_edit(self, e):
+            self.parent.db_manager.opacity = self.opacity_spin.value() / 100
+            self.set_values()
+
+        def close_button_click(self, e):
+            if e.button() == 1:
+                self.close()
 
 
 class UnsupportedClipboardWarning:
