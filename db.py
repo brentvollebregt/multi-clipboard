@@ -1,11 +1,12 @@
 import sqlite3
+# TODO Add 'preview' column to show the user a summary of the data (for things like HTML, they no longer show up)
 
 
 class DatabaseManager:
 
     def __init__(self):
         self._open_connection()
-        self.cursor.execute('CREATE TABLE IF NOT EXISTS clipboards (id INTEGER PRIMARY KEY, type INTEGER, content BLOB);')
+        self.cursor.execute('CREATE TABLE IF NOT EXISTS clipboards (id INTEGER PRIMARY KEY, type INTEGER, content BLOB, preview TEXT);')
         self.cursor.execute('CREATE TABLE IF NOT EXISTS settings (id INTEGER PRIMARY KEY, current_clipboard INTEGER, close_on_select INTEGER, html_as_plain_text INTEGER, stay_on_top INTEGER, opacity INTEGER);')
         self.cursor.execute('SELECT COUNT(*) FROM settings')
         if self.cursor.fetchone()[0] < 1:
@@ -86,7 +87,7 @@ class DatabaseManager:
 
     def get_clipboard(self, clipboard_id):
         self._open_connection()
-        self.cursor.execute('SELECT type, content FROM clipboards WHERE id = ?', (clipboard_id,))
+        self.cursor.execute('SELECT type, content, preview FROM clipboards WHERE id = ?', (clipboard_id,))
         data = self.cursor.fetchone()
         self._close_connection()
         if data is None:
@@ -94,12 +95,12 @@ class DatabaseManager:
         return {
             'type' : data['type'],
             'content' : data['content'],
-            'exists': True
+            'preview' : data['preview']
         }
 
-    def set_clipboard(self, clipboard_id, clipboard_type, clipboard_content):
+    def set_clipboard(self, clipboard_id, clipboard_type, clipboard_content, preview=''):
         self._open_connection()
-        self.cursor.execute('INSERT OR REPLACE INTO clipboards VALUES (?, ?, ?)', (clipboard_id, clipboard_type, clipboard_content))
+        self.cursor.execute('INSERT OR REPLACE INTO clipboards VALUES (?, ?, ?, ?)', (clipboard_id, clipboard_type, clipboard_content, preview))
         self._close_connection()
 
     def remove_clipboard(self, clipboard_id):

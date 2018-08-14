@@ -28,8 +28,9 @@ db_manager = DatabaseManager()
 # Put users current clipboard into the database
 user_clipboard_type = clipboard.get_clipboard_type()
 user_clipboard_contents = clipboard.get_clipboard()
+user_clipboard_preview = clipboard.get_clipboard_preview()
 current_clipboard_id = db_manager.current_clipboard
-db_manager.set_clipboard(current_clipboard_id, user_clipboard_type, user_clipboard_contents)
+db_manager.set_clipboard(current_clipboard_id, user_clipboard_type, user_clipboard_contents, user_clipboard_preview)
 
 if args.clear is None and args.set is None and not args.start_listener and not args.stop_listener:
     # If there were no arguments passed, open the UI
@@ -41,7 +42,8 @@ if args.set is not None:
         # If the requested clipboard id doesn't exist: put the users clipboard in the new clipboard (don't touch old)
         user_clipboard_type = clipboard.get_clipboard_type()
         user_clipboard_contents = clipboard.get_clipboard()
-        db_manager.set_clipboard(args.set, user_clipboard_type, user_clipboard_contents)
+        user_clipboard_preview = clipboard.get_clipboard_preview()
+        db_manager.set_clipboard(args.set, user_clipboard_type, user_clipboard_contents, user_clipboard_preview)
         db_manager.current_clipboard = args.set
     else:
         # If the requested clipboard id does exist: load the clipboard data
@@ -62,7 +64,8 @@ if args.clear is not None and len(args.clear) > 0:
     if len(db_manager.get_clipboard_ids()) < 1:
         user_clipboard_type = clipboard.get_clipboard_type()
         user_clipboard_contents = clipboard.get_clipboard()
-        db_manager.set_clipboard(0, user_clipboard_type, user_clipboard_contents)
+        user_clipboard_preview = clipboard.get_clipboard_preview()
+        db_manager.set_clipboard(0, user_clipboard_type, user_clipboard_contents, user_clipboard_preview)
         db_manager.current_clipboard = 0
 
 if args.start_listener:

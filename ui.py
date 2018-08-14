@@ -50,7 +50,7 @@ class ClipboardSelector(QtWidgets.QWidget):
                 _row = int((position + 1) / 6)
                 _col = int((position + 1) % 6)
 
-            self.grid_layout.addWidget(self.create_clipboard_label(position), _row, _col)
+            self.grid_layout.addWidget(self.create_clipboard_label(_id), _row, _col)
 
         if clipboards_total < 6:
             self.grid_layout.addWidget(self.create_clipboard_label('BUTTONS'), 0, clipboards_total)
@@ -65,30 +65,34 @@ class ClipboardSelector(QtWidgets.QWidget):
     def create_clipboard_label(self, clipboard_id):
         label = QtWidgets.QLabel()
         label.clipboard_id = clipboard_id
-        # clipboard_contents = self.db_manager.get_clipboard(clipboard_id)
-        #
-        # if clipboard_contents['type'] == clipboard.CF_PLAIN_TEXT:
-        #     label.setText("CF_PLAIN_TEXT")
-        # elif clipboard_contents['type'] == clipboard.CF_RTF:
-        #     label.setText("CF_RTF")
-        # elif clipboard_contents['type'] == clipboard.CF_UNICODE_TEXT:
-        #     label.setText("CF_UNICODE_TEXT")
-        # elif clipboard_contents['type'] == clipboard.CF_HTML:
-        #     label.setText("CF_HTML")
-        # elif clipboard_contents['type'] == clipboard.CF_FILES:
-        #     label.setText("CF_FILES")
-        # elif clipboard_contents['type'] == clipboard.CF_IMAGES:
-        #     label.setText("CF_IMAGES")
-        # else:
-        #     label.setText("Corrupted (" + str(clipboard_id) + ')')
-        label.setText("TMP (" + str(clipboard_id) + ")")
+        clipboard_contents = self.db_manager.get_clipboard(clipboard_id)
+        if clipboard_contents is None:
+            clipboard_contents = {'type' : 'corrupted', 'content' : ''}
+
+        if clipboard_contents['type'] == clipboard.CF_PLAIN_TEXT:
+            label.setText('CF_PLAIN_TEXT (' + str(clipboard_id) + ')')
+        elif clipboard_contents['type'] == clipboard.CF_RTF:
+            label.setText('CF_RTF (' + str(clipboard_id) + ')')
+        elif clipboard_contents['type'] == clipboard.CF_UNICODE_TEXT:
+            label.setText('CF_UNICODE_TEXT (' + str(clipboard_id) + ')')
+        elif clipboard_contents['type'] == clipboard.CF_HTML:
+            label.setText('CF_HTML (' + str(clipboard_id) + ')')
+        elif clipboard_contents['type'] == clipboard.CF_FILES:
+            label.setText('CF_FILES (' + str(clipboard_id) + ')')
+        elif clipboard_contents['type'] == clipboard.CF_IMAGES:
+            label.setText('CF_IMAGES (' + str(clipboard_id) + ')')
+        else:
+            label.setText('Corrupted (' + str(clipboard_id) + ')')
 
         label.setGeometry(QtCore.QRect(0, 0, CLIPBOARD_LABEL_SIZE, CLIPBOARD_LABEL_SIZE))
         label.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         label.setAlignment(QtCore.Qt.AlignCenter)
         label.setWordWrap(True)
-        label.setStyleSheet("background-color: blue")
+        label.setStyleSheet('background-color: blue')
         return label
+
+    def create_buttons(self):
+        pass
 
     def centre(self):
         # Thanks to https://stackoverflow.com/questions/20243637/pyqt4-center-window-on-active-screen
