@@ -1,6 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import sys
 import clipboard
+import utils
 
 GRID_SPACING = 6
 CLIPBOARD_LABEL_SIZE = 130
@@ -27,7 +28,7 @@ class ClipboardSelector(QtWidgets.QWidget):
             QLabel { border: 1px solid #b1b1b1; }
             QLabel:hover { border: 2px solid #ffaa00; }
         """)
-        self.setWindowOpacity(db_mgr.opacity)
+        self.setWindowOpacity(self.db_manager.opacity)
 
         clipboard_ids = self.db_manager.get_clipboard_ids()
 
@@ -67,8 +68,6 @@ class ClipboardSelector(QtWidgets.QWidget):
             self.grid_layout.addLayout(self.create_buttons(), 0, clipboards_total)
         else:
             self.grid_layout.addLayout(self.create_buttons(), 0, 5)
-
-        # self.setStyleSheet("background-color: red")
 
         self.centre()
         self.show()
@@ -149,15 +148,21 @@ class ClipboardSelector(QtWidgets.QWidget):
         frame_gm.moveCenter(center_point)
         self.move(frame_gm.topLeft())
 
+    def refresh(self):
+        self.close()
+        self.__init__(self.db_manager)
+
     def add_button(self, event):
-        print ('Add clipboard')
+        utils.create_blank_clipboard(self.db_manager)
+        self.refresh()
 
     def close_button(self, event):
         if event.button() == 1:
             self.close()
 
     def clear_button(self, event):
-        print('Clear all clipboards')
+        utils.delete_stored_clipboards(self.db_manager, self.db_manager.get_clipboard_ids())
+        self.refresh()
 
     def settings_button(self, event):
         print('Open Settings')
@@ -178,7 +183,7 @@ class UnsupportedClipboardWarning:
 def show_clipboard_selector(db_manager):
     print("UI placeholder")
     app = QtWidgets.QApplication(sys.argv)
-    ex = ClipboardSelector(db_manager)
+    cs = ClipboardSelector(db_manager)
     sys.exit(app.exec_())
 
 

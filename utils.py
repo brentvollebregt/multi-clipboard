@@ -40,3 +40,9 @@ def set_clipboard(db_manager, clipboard_id):
     requested_clipboard = db_manager.get_clipboard(clipboard_id)
     clipboard.set_clipboard(requested_clipboard['type'], requested_clipboard['content'])
     db_manager.current_clipboard = clipboard_id
+
+
+def create_blank_clipboard(db_manager):
+    """ Creates a new clipboard with an id of the current maximum id """
+    _id = db_manager.get_next_clipboard_value()
+    db_manager.set_clipboard(_id, clipboard.CF_PLAIN_TEXT, '', '')
