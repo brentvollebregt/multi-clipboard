@@ -102,20 +102,39 @@ class ClipboardSelector(QtWidgets.QWidget):
 
         label_add = QtWidgets.QLabel()
         label_add.setGeometry(QtCore.QRect(0, 0, label_size, label_size))
-        label_add.setText('Add')
+        label_add.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         label_add.setStyleSheet('background-color: blue')
+        icon = QtGui.QPixmap('images/add.png')
+        icon = icon.scaled(label_size, label_size, QtCore.Qt.KeepAspectRatio)
+        label_add.setPixmap(icon)
+        label_add.mousePressEvent = self.add_button
+
         label_settings = QtWidgets.QLabel()
         label_settings.setGeometry(QtCore.QRect(0, 0, label_size, label_size))
-        label_settings.setText('Settings')
+        label_settings.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         label_settings.setStyleSheet('background-color: blue')
+        icon = QtGui.QPixmap('images/settings.png')
+        icon = icon.scaled(label_size, label_size, QtCore.Qt.KeepAspectRatio)
+        label_settings.setPixmap(icon)
+        label_settings.mousePressEvent = self.settings_button
+
         label_trash = QtWidgets.QLabel()
         label_trash.setGeometry(QtCore.QRect(0, 0, label_size, label_size))
-        label_trash.setText('Trash')
+        label_trash.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         label_trash.setStyleSheet('background-color: blue')
+        icon = QtGui.QPixmap('images/delete.png')
+        icon = icon.scaled(label_size, label_size, QtCore.Qt.KeepAspectRatio)
+        label_trash.setPixmap(icon)
+        label_trash.mousePressEvent = self.clear_button
+
         label_close = QtWidgets.QLabel()
         label_close.setGeometry(QtCore.QRect(0, 0, label_size, label_size))
-        label_close.setText('Close')
+        label_close.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         label_close.setStyleSheet('background-color: blue')
+        icon = QtGui.QPixmap('images/close.png')
+        icon = icon.scaled(label_size, label_size, QtCore.Qt.KeepAspectRatio)
+        label_close.setPixmap(icon)
+        label_close.mousePressEvent = self.close_button
 
         layout.addWidget(label_add, 0, 0)
         layout.addWidget(label_settings, 0, 1)
@@ -132,20 +151,17 @@ class ClipboardSelector(QtWidgets.QWidget):
         frame_gm.moveCenter(center_point)
         self.move(frame_gm.topLeft())
 
-    def get_clipboards(self):
-        pass
+    def add_button(self, event):
+        print ('Add clipboard')
 
-    def add_button(self):
-        pass
+    def close_button(self, event):
+        print('Close')
 
-    def close_button(self):
-        pass
+    def clear_button(self, event):
+        print('Clear all clipboards')
 
-    def clear_button(self):
-        pass
-
-    def settings_button(self):
-        pass
+    def settings_button(self, event):
+        print('Open Settings')
 
 
 class SettingsWindow:
