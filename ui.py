@@ -109,6 +109,10 @@ class ClipboardSelector(QtWidgets.QWidget):
         if self.db_manager.current_clipboard == clipboard_id:
             label.setStyleSheet("""QLabel {border: 1px solid #ffaa00;} QLabel:hover {border: 2px solid #ffaa00;}""")
 
+        # On click
+        label_click = self.LabelClick(clipboard_id, self)
+        label.mousePressEvent = label_click.on_click
+
         return label
 
     def create_buttons(self):
@@ -167,6 +171,37 @@ class ClipboardSelector(QtWidgets.QWidget):
     def settings_button(self, event):
         print('Open Settings')
 
+    class LabelClick:
+
+        def __init__(self, clipboard_id, parent):
+            self.clipboard_id = clipboard_id
+            self.parent = parent
+
+        def on_click(self, event):
+            if event.button() == 1: # Check it is a right click
+                utils.set_clipboard(self.parent.db_manager, self.clipboard_id)
+                if self.parent.db_manager.close_on_select:
+                    self.parent.close()
+                else:
+                    self.parent.refresh()
+
+    class LabelContextMenu:
+
+        ACTION_REMOVE = 'remove'
+        ACTION_SWITCH = 'switch'
+
+        def __init__(self, clipboard_id, label, parent):
+            self.clipboard_id = clipboard_id
+            self.label = label
+            self.parent = parent
+            self.menu = QtWidgets.QMenu()
+            self.menu.addAction(QtWidgets.QAction('remove'))
+            self.menu.addSeparator()
+            self.menu.addAction(QtWidgets.QAction('switch'))
+
+        def on_menu_call(self, point):
+            pass
+
 
 class SettingsWindow:
     # TODO SettingsWindow
@@ -181,7 +216,6 @@ class UnsupportedClipboardWarning:
 
 
 def show_clipboard_selector(db_manager):
-    print("UI placeholder")
     app = QtWidgets.QApplication(sys.argv)
     cs = ClipboardSelector(db_manager)
     sys.exit(app.exec_())
