@@ -58,12 +58,14 @@ def get_clipboard_preview():
     preview_type = CF_PREVIEW_RELATIONS[clipboard_type]
     if preview_type == 0:
         if clipboard_type == CF_IMAGES:
+            # If the clipboard type is an image, get the bytes using Pillow in JPEG format
             img = ImageGrab.grabclipboard()
             data = io.BytesIO()
             img.save(data, format='JPEG')
             return data.getvalue()
         else:
             return ''
+    # Attempt to get preview
     win32clipboard.OpenClipboard()
     try:
         contents = win32clipboard.GetClipboardData(preview_type)
@@ -78,7 +80,7 @@ def set_clipboard(_type, _data, preview_extra):
     win32clipboard.OpenClipboard()
     win32clipboard.EmptyClipboard()
     win32clipboard.SetClipboardData(_type, _data)
-    # Preview extra is so we can keep reading the preview later - we lose clipboard data with html
+    # Preview extra is so we can keep reading the preview later
     if CF_PREVIEW_RELATIONS[_type] != 0:
         win32clipboard.SetClipboardData(CF_PREVIEW_RELATIONS[_type], preview_extra)
     win32clipboard.CloseClipboard()

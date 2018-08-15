@@ -32,6 +32,7 @@ def store_clipboard(db_manager):
     """ Stores the users current clipboard into the current clipboard in the database """
     user_clipboard_type = clipboard.get_clipboard_type()
     if user_clipboard_type is None:
+        # If we can't support this clipboard, show an error (will stop after dialog closed)
         ui.show_unsupported_clipboard_warning()
     user_clipboard_contents = clipboard.get_clipboard()
     user_clipboard_preview = clipboard.get_clipboard_preview()

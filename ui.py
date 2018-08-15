@@ -6,8 +6,10 @@ import listener
 import os
 
 
+# Location of the images folder
 IMAGES_FOLDER = os.path.dirname(os.path.realpath(__file__)) + '\\images'
 
+# Static values for the GUI - for customisation
 GRID_SPACING = 6
 CLIPBOARD_LABEL_SIZE = 130
 BUTTONS_SPACING = 4
@@ -16,12 +18,13 @@ SETTINGS_DISTANCE_ABOVE_PARENT = 5
 
 
 class ClipboardSelector(QtWidgets.QWidget):
+    """ The main window for the clipboard selection GUI"""
 
     def __init__(self, db_mgr):
         super().__init__()
         self.db_manager = db_mgr
 
-        # Setup window
+        # Setup window: title, flags, stylesheet, opacity
         self.setWindowTitle('Multi Clipboard')
         if self.db_manager.stay_on_top and self.db_manager.disable_frame:
             self.setWindowFlags(QtCore.Qt.FramelessWindowHint | QtCore.Qt.WindowStaysOnTopHint)
@@ -42,7 +45,7 @@ class ClipboardSelector(QtWidgets.QWidget):
 
         clipboard_ids = self.db_manager.get_clipboard_ids()
 
-        # Calculating grid size
+        # Calculating grid and window size
         clipboards_total = len(clipboard_ids)
         if clipboards_total < 6:
             rows = 1
@@ -61,9 +64,10 @@ class ClipboardSelector(QtWidgets.QWidget):
         self.grid_layout.setSpacing(GRID_SPACING)
         self.grid_layout.setContentsMargins(GRID_SPACING, GRID_SPACING, GRID_SPACING, GRID_SPACING)
 
+        # Add clipboards
         for position, _id in enumerate(clipboard_ids):
             if position < 5:
-                # Deals with the first 5 to make space for the buttons
+                # If there are less than 5 clipboards (to account for settings button)
                 _col = position
                 _row = 0
             else:
@@ -72,6 +76,7 @@ class ClipboardSelector(QtWidgets.QWidget):
 
             self.grid_layout.addWidget(self.create_clipboard_label(_id), _row, _col)
 
+        # Add buttons
         if clipboards_total < 6:
             self.grid_layout.addLayout(self.create_buttons(), 0, clipboards_total)
         else:
@@ -81,6 +86,7 @@ class ClipboardSelector(QtWidgets.QWidget):
         self.show()
 
     def create_clipboard_label(self, clipboard_id):
+        """ Create a label for a particular clipboard id """
         label = QtWidgets.QLabel()
         label.setFixedSize(CLIPBOARD_LABEL_SIZE, CLIPBOARD_LABEL_SIZE)
         label.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
@@ -91,7 +97,7 @@ class ClipboardSelector(QtWidgets.QWidget):
         if clipboard_contents is None:
             clipboard_contents = {'type' : -1, 'content' : '', 'preview' : 'No Preview'}
 
-        # Decide on what is being shown in the clipboard
+        # Decide on what is being shown in the clipboard (preview)
         if clipboard.CF_PREVIEW_RELATIONS[clipboard_contents['type']] != 0:
             label.setText(clipboard_contents['preview'])
             label.setMargin(3)
@@ -101,7 +107,7 @@ class ClipboardSelector(QtWidgets.QWidget):
             image = image.scaled(CLIPBOARD_LABEL_SIZE, CLIPBOARD_LABEL_SIZE, QtCore.Qt.KeepAspectRatio)
             label.setPixmap(image)
         else:
-            label.setText('Preview not avaiable')
+            label.setText('Preview not available')
             label.setMargin(3)
 
         # Formatting
@@ -125,6 +131,8 @@ class ClipboardSelector(QtWidgets.QWidget):
         return label
 
     def create_buttons(self):
+        """ Create the buttons for the right hand side of the GUI """
+        # Create base label
         layout = QtWidgets.QGridLayout()
         layout.setGeometry(QtCore.QRect(0, 0, CLIPBOARD_LABEL_SIZE, CLIPBOARD_LABEL_SIZE))
         layout.setSpacing(BUTTONS_SPACING)
@@ -141,6 +149,7 @@ class ClipboardSelector(QtWidgets.QWidget):
             [IMAGES_FOLDER + '\\close.png', self.close_button, 1, 1]
         ]
 
+        # Setup each button with data provided above
         for button in button_data:
             tmp_btn = QtWidgets.QLabel()
             tmp_btn.setFixedSize(label_size, label_size)
@@ -155,6 +164,7 @@ class ClipboardSelector(QtWidgets.QWidget):
         return layout
 
     def centre(self):
+        """ Centre the window relative to the active display """
         # Thanks to https://stackoverflow.com/questions/20243637/pyqt4-center-window-on-active-screen
         frame_gm = self.frameGeometry()
         screen = QtWidgets.QApplication.desktop().screenNumber(QtWidgets.QApplication.desktop().cursor().pos())
@@ -163,26 +173,32 @@ class ClipboardSelector(QtWidgets.QWidget):
         self.move(frame_gm.topLeft())
 
     def refresh(self):
+        """ Refresh the whole GUI"""
         self.close()
         self.__init__(self.db_manager)
 
     def add_button(self, event):
+        """ Event for the add button """
         utils.create_blank_clipboard(self.db_manager)
         self.refresh()
 
     def close_button(self, event):
+        """ Event for the close button """
         if event.button() == 1:
             self.close()
 
     def clear_button(self, event):
+        """ Event for the clear button """
         utils.delete_stored_clipboards(self.db_manager, self.db_manager.get_clipboard_ids())
         self.refresh()
 
     def settings_button(self, event):
+        """ Event for the settings button """
         settings_window = self.SettingsWindow(self)
         settings_window.show()
 
     class LabelClick:
+        """ Handler for left and right clicks on a label """
 
         def __init__(self, clipboard_id, parent, label):
             self.clipboard_id = clipboard_id
@@ -190,13 +206,16 @@ class ClipboardSelector(QtWidgets.QWidget):
             self.label = label
 
         def on_click(self, event):
-            if event.button() == 1: # Check it is a right click
+            """ When clicked, decide what to do """
+            if event.button() == 1:
+                # If this is a left click, set the clipboard and close if setting is true
                 utils.set_clipboard(self.parent.db_manager, self.clipboard_id)
                 if self.parent.db_manager.close_on_select:
                     self.parent.close()
                 else:
                     self.parent.refresh()
             elif event.button() == 2:
+                # If this is a right click, open context menu
                 menu = QtWidgets.QMenu(self.label)
                 remove_action = QtWidgets.QAction('remove', self.label)
                 menu.addAction(remove_action)
@@ -213,6 +232,7 @@ class ClipboardSelector(QtWidgets.QWidget):
                         self.parent.refresh()
 
     class SettingsWindow(QtWidgets.QWidget):
+        """ Settings window for the main clipboard GUI """
 
         SETTINGS_GRID_SPACING = 4
         SETTINGS_TILE_SIZE = 60
@@ -221,21 +241,25 @@ class ClipboardSelector(QtWidgets.QWidget):
             super().__init__()
             self.parent = parent
 
+            # Setup settings window
             self.setWindowFlags(QtCore.Qt.FramelessWindowHint | QtCore.Qt.WindowStaysOnTopHint)
             self.setStyleSheet('QWidget {color: #b1b1b1; background-color: #323232; border: 0px;}')
             self.setWindowOpacity(1)
 
+            # Setup grid layout
             self.grid_layout = QtWidgets.QGridLayout()
             self.setLayout(self.grid_layout)
             self.grid_layout.setSpacing(self.SETTINGS_GRID_SPACING)
             self.grid_layout.setContentsMargins(self.SETTINGS_GRID_SPACING, self.SETTINGS_GRID_SPACING, self.SETTINGS_GRID_SPACING, self.SETTINGS_GRID_SPACING)
 
-            items = 7 # Manually set how many buttons/inputs we will have
+            # Calculate window size based off **static** value of how many buttons/inputs we will have
+            items = 7
             self.setFixedSize(
                 (items * (self.SETTINGS_GRID_SPACING + self.SETTINGS_TILE_SIZE)) + self.SETTINGS_GRID_SPACING,
                 self.SETTINGS_TILE_SIZE + (2 * self.SETTINGS_GRID_SPACING)
             )
 
+            # Setup general toggle buttons
             self.close_on_select_button = self.create_basic_button('Close on Select', self.close_on_select_button_click)
             self.grid_layout.addWidget(self.close_on_select_button, 0, 0)
 
@@ -245,6 +269,7 @@ class ClipboardSelector(QtWidgets.QWidget):
             self.disable_frame_button = self.create_basic_button('Disable Frame', self.disable_frame_button_click)
             self.grid_layout.addWidget(self.disable_frame_button, 0, 2)
 
+            # Setup opacity QSpinBox
             self.opacity_spin = QtWidgets.QSpinBox()
             self.opacity_spin.setFixedSize(self.SETTINGS_TILE_SIZE, self.SETTINGS_TILE_SIZE)
             self.opacity_spin.setMaximum(100)
@@ -253,12 +278,14 @@ class ClipboardSelector(QtWidgets.QWidget):
             self.opacity_spin.valueChanged.connect(self.opacity_edit)
             self.grid_layout.addWidget(self.opacity_spin, 0, 3)
 
+            # Setup listener toggle buttons
             self.toggle_listener_button = self.create_basic_button('Toggle Listener', self.toggle_listener_button_click)
             self.grid_layout.addWidget(self.toggle_listener_button, 0, 4)
 
             self.toggle_listener_auto_start_button = self.create_basic_button('Listener Autostart', self.toggle_listener_auto_start_button_click)
             self.grid_layout.addWidget(self.toggle_listener_auto_start_button, 0, 5)
 
+            # Setup close button
             icon = QtGui.QPixmap(IMAGES_FOLDER + '\\close.png')
             icon = icon.scaled(self.SETTINGS_TILE_SIZE, self.SETTINGS_TILE_SIZE, QtCore.Qt.KeepAspectRatio)
             self.close_label = QtWidgets.QLabel()
@@ -277,6 +304,7 @@ class ClipboardSelector(QtWidgets.QWidget):
             self.set_values()
 
         def create_basic_button(self, text, onclick):
+            """ Create a basic settings button with text and a onclick method """
             tmp_btn = QtWidgets.QLabel()
             tmp_btn.setFixedSize(self.SETTINGS_TILE_SIZE, self.SETTINGS_TILE_SIZE)
             tmp_btn.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
@@ -288,16 +316,19 @@ class ClipboardSelector(QtWidgets.QWidget):
             return tmp_btn
 
         def position_above_parent(self):
+            """ Position the settings GUI above the parent (main clipboard GUI) """
             parents_geometry = self.parent.frameGeometry()
             parent_top = parents_geometry.y()
             parent_center = parents_geometry.x() + (parents_geometry.width() / 2)
 
+            # Calculate positions of new window based off parent
             my_geometry = self.frameGeometry()
             my_x = parent_center - (my_geometry.width() / 2)
             my_y = parent_top - my_geometry.height() - SETTINGS_DISTANCE_ABOVE_PARENT
             self.move(my_x, my_y)
 
         def set_values(self):
+            """ Update the display/value for each label depending on real states """
             self.opacity_spin.setValue(self.parent.db_manager.opacity * 100)
 
             settings_label_pairs = [
@@ -308,6 +339,7 @@ class ClipboardSelector(QtWidgets.QWidget):
                 [listener.is_listener_auto_start(), self.toggle_listener_auto_start_button],
             ]
 
+            # Go through each index of settings_label_pairs checking value and then setting label style sheet
             for pair in settings_label_pairs:
                 if pair[0]:
                     pair[1].setStyleSheet(
@@ -321,22 +353,27 @@ class ClipboardSelector(QtWidgets.QWidget):
                     )
 
         def close_on_select_button_click(self, e):
+            """ Event handler for close_on_select_button """
             self.parent.db_manager.close_on_select = not self.parent.db_manager.close_on_select
             self.set_values()
 
         def stay_on_top_button_click(self, e):
+            """ Event handler for stay_on_top_button """
             self.parent.db_manager.stay_on_top = not self.parent.db_manager.stay_on_top
             self.set_values()
 
         def disable_frame_button_click(self, e):
+            """ Event handler for disable_frame_button """
             self.parent.db_manager.disable_frame = not self.parent.db_manager.disable_frame
             self.set_values()
 
         def opacity_edit(self, e):
+            """ Event handler for the edit of opacity_edit """
             self.parent.db_manager.opacity = self.opacity_spin.value() / 100
             self.set_values()
 
         def toggle_listener_button_click(self, e):
+            """ Event handler for toggle_listener_button """
             if listener.is_listener_running():
                 listener.stop_listener()
             else:
@@ -344,6 +381,7 @@ class ClipboardSelector(QtWidgets.QWidget):
             self.set_values()
 
         def toggle_listener_auto_start_button_click(self, e):
+            """ Event handler for toggle_listener_auto_start_button """
             if listener.is_listener_auto_start():
                 listener.remove_listener_auto_start()
             else:
@@ -351,17 +389,20 @@ class ClipboardSelector(QtWidgets.QWidget):
             self.set_values()
 
         def close_button_click(self, e):
+            """ Close the window when the close button is pressed """
             if e.button() == 1:
                 self.close()
 
 
 def show_clipboard_selector(db_manager):
+    """ Open the main GUI application """
     app = QtWidgets.QApplication(sys.argv)
     cs = ClipboardSelector(db_manager)
     sys.exit(app.exec_())
 
 
 def show_unsupported_clipboard_warning():
+    """ Show a message warning the user about an unsupported clipboard """
     app = QtWidgets.QApplication([])
     msg = QtWidgets.QMessageBox()
     msg.setIcon(QtWidgets.QMessageBox.Critical)
@@ -374,4 +415,4 @@ def show_unsupported_clipboard_warning():
     msg.show()
     msg.raise_()
     msg.activateWindow()
-    app.exec_()
+    sys.exit(app.exec_())

@@ -3,9 +3,9 @@ Switch clipboard contents using a simple GUI<br />
 Images, text, files and other formats are supported with unlimited amounts of saved clipboards able to be created.<br />
 The idea of this is to easily switch clipboards with a simple click in a GUI. It comes with a built in listener for Ctrl + Windows + C
 
-## GUI
-
 ![GUI Example](http://i.imgur.com/dp42h1m.jpg "GUI Example")
+
+### GUI With Settings Open
 
 ## What Is This?
 This is my solution to constantly overwriting my clipboard. It is a GUI that acts like a hotbar, click on a virtual clipboard to place it on your actual clipboard. Some command line support has also been added in the form of setting and clearing clipboards.
@@ -39,10 +39,14 @@ To run the GUI, simply run the ```multi_clipboard.py``` script with no parameter
 * `clipboards.py --start-listener` - Starts the listener if it isn't running
 * `clipboards.py --stop-listener` - Stops the listener if it's running
 
-### The Listener
+## The Listener
 This package has a built in listener which listens for Ctrl + Windows + C (Left control). This can be enabled in the GUI's settings under "Toggle Listener" or by arguments as described above. This also comes with a feature to make the listener start on startup. To enable this, go into the GUI's settings and click "Listener Autostart" to toggle it on/off.
 
-#### So What Happens If...
+## GUI With Settings Open
+
+![Main GUI](/images/multi-clipboard/main-gui-with-settings-shown.png)
+
+## So What Happens If...
  - I delete all clipboards? -> Clipboard 0 will be created with the current contents
  - I delete the clipboard I am currently on? -> Nothing, your clipboard will be saved back to that clipboard later.
  - I am shown an error saying my clipboard isn't supported? -> Open up an issue with details on what your clipboard contents are, we can see if it can be supported
@@ -51,10 +55,8 @@ This package has a built in listener which listens for Ctrl + Windows + C (Left 
 * [Michael Robertson](https://github.com/MBRobertson) for adding file support in previous versions.
 
 ## Things that still are being done
- - Comment and label methods
  - Messages back in argument passing (print)
  - Put tool tips on buttons
- - Add new image to README
  - Convert to package format
     - Add setup.py
     - License
