@@ -3,6 +3,10 @@ import sys
 import clipboard
 import utils
 import listener
+import os
+
+
+IMAGES_FOLDER = os.path.dirname(os.path.realpath(__file__)) + '\\images'
 
 GRID_SPACING = 6
 CLIPBOARD_LABEL_SIZE = 130
@@ -131,10 +135,10 @@ class ClipboardSelector(QtWidgets.QWidget):
 
         # Data to setup buttons to stop repeating lines [img, onclick, row, col]
         button_data = [
-            ['images/add.png', self.add_button, 0, 0],
-            ['images/settings.png', self.settings_button, 0, 1],
-            ['images/delete.png', self.clear_button, 1, 0],
-            ['images/close.png', self.close_button, 1, 1]
+            [IMAGES_FOLDER + '\\add.png', self.add_button, 0, 0],
+            [IMAGES_FOLDER + '\\settings.png', self.settings_button, 0, 1],
+            [IMAGES_FOLDER + '\\delete.png', self.clear_button, 1, 0],
+            [IMAGES_FOLDER + '\\close.png', self.close_button, 1, 1]
         ]
 
         for button in button_data:
@@ -255,7 +259,7 @@ class ClipboardSelector(QtWidgets.QWidget):
             self.toggle_listener_auto_start_button = self.create_basic_button('Listener Autostart', self.toggle_listener_auto_start_button_click)
             self.grid_layout.addWidget(self.toggle_listener_auto_start_button, 0, 5)
 
-            icon = QtGui.QPixmap('images/close.png')
+            icon = QtGui.QPixmap(IMAGES_FOLDER + '\\close.png')
             icon = icon.scaled(self.SETTINGS_TILE_SIZE, self.SETTINGS_TILE_SIZE, QtCore.Qt.KeepAspectRatio)
             self.close_label = QtWidgets.QLabel()
             self.close_label.setFixedSize(self.SETTINGS_TILE_SIZE, self.SETTINGS_TILE_SIZE)

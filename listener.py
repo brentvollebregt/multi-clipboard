@@ -7,8 +7,8 @@ import utils
 import ui
 
 
-STARTUP_FOLDER = os.getenv('APPDATA') + '\\Microsoft\\Windows\\Start Menu\\Programs\\Startup'
-STARTUP_COMMAND = 'python ' + os.path.dirname(os.path.realpath(__file__)) + '\multi_clipboard.py'
+STARTUP_FILE = os.getenv('APPDATA') + '\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\multi-clipboard.vbs'
+STARTUP_COMMAND = 'python ' + os.path.dirname(os.path.realpath(__file__)) + '\\multi_clipboard.py'
 
 LISTENER_COMBINATION = [
     keyboard.Key.ctrl_l,
@@ -59,15 +59,18 @@ def is_listener_running():
 
 
 def setup_listener_auto_start():
-    pass
+    f = open(STARTUP_FILE, 'w')
+    f.write('Set oShell = WScript.CreateObject ("WScript.Shell")\n')
+    f.write('oShell.run "' + STARTUP_COMMAND + '", 0, True')
+    f.close()
 
 
 def remove_listener_auto_start():
-    pass
+    os.remove(STARTUP_FILE)
 
 
 def is_listener_auto_start():
-    return False # TODO Return true if file is found for autostart
+    return os.path.isfile(STARTUP_FILE)
 
 
 class ListenerThread(threading.Thread):

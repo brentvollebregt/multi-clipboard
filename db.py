@@ -1,4 +1,8 @@
 import sqlite3
+import os
+
+
+DATABASE_LOCATION = os.path.dirname(os.path.realpath(__file__)) + '\\clipboards.sqlite'
 
 
 class DatabaseManager:
@@ -13,7 +17,7 @@ class DatabaseManager:
         self._close_connection()
 
     def _open_connection(self):
-        self.connection = sqlite3.connect('clipboards.sqlite')
+        self.connection = sqlite3.connect(DATABASE_LOCATION)
         self.connection.row_factory = sqlite3.Row
         self.cursor = self.connection.cursor()
 
