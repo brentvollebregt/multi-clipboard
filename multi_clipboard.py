@@ -17,7 +17,7 @@ db_manager = DatabaseManager()
 
 utils.store_clipboard(db_manager)
 
-if args.clear is None and args.set is None and not args.start_listener and not args.stop_listener and args.current is None:
+if args.clear is None and args.set is None and not args.start_listener and not args.stop_listener and not args.current:
     # If there were no arguments passed, open the UI
     ui.show_clipboard_selector(db_manager)
 
