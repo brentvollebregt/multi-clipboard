@@ -110,7 +110,9 @@ class ListenerThread(threading.Thread):
         if key in LISTENER_COMBINATION:
             self.keys_pressed.add(key)
             if all([key in self.keys_pressed for key in LISTENER_COMBINATION]):
-                self.start_multi_clipboard()
+                # Thread the GUI so it doesn't block
+                ui_thread = threading.Thread(target=self.start_multi_clipboard)
+                ui_thread.start()
 
     def on_release(self, key):
         if key in LISTENER_COMBINATION and key in self.keys_pressed:

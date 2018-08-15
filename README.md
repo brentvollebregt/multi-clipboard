@@ -1,7 +1,7 @@
 # Mutli Clipboard
 Switch clipboard contents using a simple GUI<br />
 Images, text, files and other formats are supported with unlimited amounts of saved clipboards able to be created.<br />
-The idea of this is to easily switch clipboards with a simple click in a GUI.
+The idea of this is to easily switch clipboards with a simple click in a GUI. It comes with a built in listener for Ctrl + Windows + C
 
 ## GUI
 
@@ -36,6 +36,11 @@ To run the GUI, simply run the ```multi_clipboard.py``` script with no parameter
 * `clipboards.py -s [clipboard]` - Will load data from that clipboard if it exists
 * `clipboards.py -c *` - Delete all clipboards
 * `clipboards.py -c 1` - Delete clipboard 1
+* `clipboards.py --start-listener` - Starts the listener if it isn't running
+* `clipboards.py --stop-listener` - Stops the listener if it's running
+
+### The Listener
+This package has a built in listener which listens for Ctrl + Windows + C (Left control). This can be enabled in the GUI's settings under "Toggle Listener" or by arguments as described above. This also comes with a feature to make the listener start on startup. To enable this, go into the GUI's settings and click "Listener Autostart" to toggle it on/off.
 
 #### So What Happens If...
  - I delete all clipboards? -> Clipboard 0 will be created with the current contents
@@ -50,15 +55,6 @@ To run the GUI, simply run the ```multi_clipboard.py``` script with no parameter
  - Messages back in argument passing (print)
  - Put tool tips on buttons
  - Add new image to README
- - Add listener running on a server to wait for [Ctrl + Windows + C]
-     - Add notes to readme for starting and stopping (--start-listener)
-     - Optional import for pynput
-        - Notify the user if not installed
-     - Add autostart option
-        - Put in settings to toggle
-        - "Listen on Startup"
-        - Put a vbs script in startup folder
-        - Remove if toggled off
  - Convert to package format
     - Add setup.py
     - License
