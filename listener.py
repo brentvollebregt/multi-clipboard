@@ -55,6 +55,9 @@ def is_listener_running():
                 return True
         except socket.timeout:
             pass
+        except ConnectionResetError:
+            pass
+
     return False
 
 
