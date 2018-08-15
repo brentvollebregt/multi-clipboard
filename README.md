@@ -3,7 +3,7 @@ Switch clipboard contents using a simple GUI<br />
 Images, text, files and other formats are supported with unlimited amounts of saved clipboards able to be created.<br />
 The idea of this is to easily switch clipboards with a simple click in a GUI. It comes with a built in listener for Ctrl + Windows + C
 
-![GUI Example](http://i.imgur.com/dp42h1m.jpg "GUI Example")
+![Main GUI](https://nitratine.net/images/multi-clipboard/main-gui.png)
 
 ### GUI With Settings Open
 
@@ -45,7 +45,7 @@ This package has a built in listener which listens for Ctrl + Windows + C (Left 
 
 ## GUI With Settings Open
 
-![Main GUI](/images/multi-clipboard/main-gui-with-settings-shown.png)
+![Main GUI with Settings](https://nitratine.net/images/multi-clipboard/main-gui-with-settings-shown.png)
 
 ## So What Happens If...
  - I delete all clipboards? -> Clipboard 0 will be created with the current contents
