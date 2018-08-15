@@ -6,7 +6,8 @@ import utils
 GRID_SPACING = 6
 CLIPBOARD_LABEL_SIZE = 130
 BUTTONS_SPACING = 4
-BUTTON_SIZE_REDUCTION = 15
+BUTTON_IMAGE_SIZE_REDUCTION = 15
+SETTINGS_DISTANCE_ABOVE_PARENT = 5
 
 
 class ClipboardSelector(QtWidgets.QWidget):
@@ -137,7 +138,7 @@ class ClipboardSelector(QtWidgets.QWidget):
             tmp_btn.setFixedSize(label_size, label_size)
             tmp_btn.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
             icon = QtGui.QPixmap(button[0])
-            icon = icon.scaled(label_size - BUTTON_SIZE_REDUCTION, label_size - BUTTON_SIZE_REDUCTION, QtCore.Qt.KeepAspectRatio)
+            icon = icon.scaled(label_size - BUTTON_IMAGE_SIZE_REDUCTION, label_size - BUTTON_IMAGE_SIZE_REDUCTION, QtCore.Qt.KeepAspectRatio)
             tmp_btn.setPixmap(icon)
             tmp_btn.setAlignment(QtCore.Qt.AlignCenter)
             tmp_btn.mousePressEvent = button[1]
@@ -255,6 +256,7 @@ class ClipboardSelector(QtWidgets.QWidget):
             self.close_label.mousePressEvent = self.close_button_click
             self.grid_layout.addWidget(self.close_label, 0, 4)
 
+            self.position_above_parent()
             self.set_values()
 
         def create_basic_button(self, text, onclick):
@@ -267,6 +269,16 @@ class ClipboardSelector(QtWidgets.QWidget):
             tmp_btn.setAlignment(QtCore.Qt.AlignCenter)
             tmp_btn.mousePressEvent = onclick
             return tmp_btn
+
+        def position_above_parent(self):
+            parents_geometry = self.parent.frameGeometry()
+            parent_top = parents_geometry.y()
+            parent_center = parents_geometry.x() + (parents_geometry.width() / 2)
+
+            my_geometry = self.frameGeometry()
+            my_x = parent_center - (my_geometry.width() / 2)
+            my_y = parent_top - my_geometry.height() - SETTINGS_DISTANCE_ABOVE_PARENT
+            self.move(my_x, my_y)
 
         def set_values(self):
             self.opacity_spin.setValue(self.parent.db_manager.opacity * 100)
