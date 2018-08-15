@@ -47,6 +47,7 @@ To run the GUI, simply run the ```multi_clipboard.py``` script with no parameter
 
 ## Things that still are being done
  - Comment and label methods
+ - Messages back in argument passing (print)
  - Put tool tips on buttons
  - Add new image to README
  - Add listener running on a server to wait for [Ctrl + Windows + C]

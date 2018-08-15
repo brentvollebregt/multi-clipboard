@@ -5,12 +5,18 @@ import threading
 
 
 STARTUP_FOLDER = os.getenv('APPDATA') + '\\Microsoft\\Windows\\Start Menu\\Programs\\Startup'
-STARTUP_COMMAND = 'python ' + os.path.abspath(__file__)
+STARTUP_COMMAND = 'python ' + os.path.dirname(os.path.realpath(__file__)) + '\multi_clipboard.py'
+
 LISTENER_COMBINATION = [
     keyboard.Key.ctrl_l,
     keyboard.Key.cmd,
     keyboard.KeyCode(char='c')
 ]
+
+SERVER_ARE_YOU_RUNNING = b'Running?'
+SERVER_YES = b'Yes'
+SERVER_STOP = b'Stop'
+SERVER_LOCK_FILE = os.path.dirname(os.path.realpath(__file__)) + '\.server_lock'
 
 
 def start_listener():
@@ -21,12 +27,32 @@ def start_listener():
 
 def stop_listener():
     # Try and read the lock file with the port in it. Tell the port to stop if it exists
-    pass
+    f = open(SERVER_LOCK_FILE, 'r')
+    port = int(f.readline())
+    f.close()
+    server = ('127.0.0.1', port)
+
+    client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    client_socket.sendto(SERVER_STOP, server)
 
 
 def is_listener_running():
-    # Return a bool of whether the listener is currently running
-    return False # TODO Return true if server is running
+    if os.path.isfile(SERVER_LOCK_FILE):
+        f = open(SERVER_LOCK_FILE, 'r')
+        port = int(f.readline())
+        f.close()
+        server = ('127.0.0.1', port)
+
+        client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        client_socket.settimeout(1.0)
+        client_socket.sendto(SERVER_ARE_YOU_RUNNING, server)
+        try:
+            message, server = client_socket.recvfrom(1024)
+            if message == SERVER_YES:
+                return True
+        except socket.timeout:
+            pass
+    return False
 
 
 def setup_listener_auto_start():
@@ -49,17 +75,30 @@ class ListenerThread(threading.Thread):
         super(ListenerThread, self).__init__()
 
     def run(self):
-        self.server_thread = threading.Thread(target=self.server)
-        self.server_thread.start()
+        server_thread = threading.Thread(target=self.server)
+        server_thread.start()
         self.listen() # Just run this in the current thread
 
     def server(self):
+        server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        server_socket.bind(('127.0.0.1', 0))
+
+        f = open(SERVER_LOCK_FILE, 'w')
+        f.write(str(server_socket.getsockname()[1]))
+        f.close()
+
         while True:
-            pass
+            message, address = server_socket.recvfrom(1024)
+            if message == SERVER_ARE_YOU_RUNNING:
+                server_socket.sendto(SERVER_YES, address)
+            elif message == SERVER_STOP:
+                self.listener.stop()
+                os.remove(SERVER_LOCK_FILE)
+                break
 
     def listen(self):
-        with keyboard.Listener(on_press=self.on_press, on_release=self.on_release) as listener:
-            listener.join()
+        with keyboard.Listener(on_press=self.on_press, on_release=self.on_release) as self.listener:
+            self.listener.join()
 
     def on_press(self, key):
         if key in LISTENER_COMBINATION:
@@ -72,7 +111,7 @@ class ListenerThread(threading.Thread):
             self.keys_pressed.remove(key)
 
     def start_multi_clipboard(self):
-        print ("START")
+        print('Start')
 
 
 if __name__ == "__main__":

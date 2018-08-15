@@ -337,12 +337,14 @@ class ClipboardSelector(QtWidgets.QWidget):
                 listener.stop_listener()
             else:
                 listener.start_listener()
+            self.set_values()
 
         def toggle_listener_auto_start_button_click(self, e):
             if listener.is_listener_auto_start():
                 listener.remove_listener_auto_start()
             else:
                 listener.setup_listener_auto_start()
+            self.set_values()
 
         def close_button_click(self, e):
             if e.button() == 1:
