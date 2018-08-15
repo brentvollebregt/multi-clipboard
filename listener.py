@@ -2,6 +2,9 @@ import os
 from pynput import keyboard
 import socket
 import threading
+from db import DatabaseManager
+import utils
+import ui
 
 
 STARTUP_FOLDER = os.getenv('APPDATA') + '\\Microsoft\\Windows\\Start Menu\\Programs\\Startup'
@@ -111,7 +114,9 @@ class ListenerThread(threading.Thread):
             self.keys_pressed.remove(key)
 
     def start_multi_clipboard(self):
-        print('Start')
+        db_manager = DatabaseManager()
+        utils.store_clipboard(db_manager)
+        ui.show_clipboard_selector(db_manager)
 
 
 if __name__ == "__main__":
