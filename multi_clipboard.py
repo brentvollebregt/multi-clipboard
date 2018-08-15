@@ -39,8 +39,10 @@ if args.clear is not None and len(args.clear) > 0:
 
 if args.start_listener:
     # If --start-listener is passed, start the listener
-    listener.start_listener()
+    if not listener.is_listener_running():
+        listener.start_listener()
 
 if args.stop_listener:
     # If --stop-listener is passed, stop the listener
-    listener.stop_listener()
+    if listener.is_listener_running():
+        listener.stop_listener()

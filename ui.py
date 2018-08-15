@@ -25,15 +25,15 @@ class ClipboardSelector(QtWidgets.QWidget):
             self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         elif self.db_manager.disable_frame:
             self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
-        self.setStyleSheet("""
-            QMenu { border: 1px solid #000; }
-            QMenu::item { padding: 2px 20px 2px 20px; }
-            QMenu::item:selected { color: #000000; }
-            QWidget { color: #b1b1b1; background-color: #323232; }
-            QWidget:item:selected { background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #ffa02f, stop: 1 #d7801a); }
-            QLabel { border: 1px solid #b1b1b1; }
-            QLabel:hover { border: 2px solid #ffaa00; }
-        """)
+        self.setStyleSheet(
+            'QMenu { border: 1px solid #000; }'
+            'QMenu::item { padding: 2px 20px 2px 20px; }'
+            'QMenu::item:selected { color: #000000; }'
+            'QWidget { color: #b1b1b1; background-color: #323232; }'
+            'QWidget:item:selected { background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #ffa02f, stop: 1 #d7801a); }'
+            'QLabel { border: 1px solid #b1b1b1; }'
+            'QLabel:hover { border: 2px solid #ffaa00; }'
+        )
         self.setWindowOpacity(self.db_manager.opacity)
 
         clipboard_ids = self.db_manager.get_clipboard_ids()
@@ -109,7 +109,10 @@ class ClipboardSelector(QtWidgets.QWidget):
 
         # If this is the currently selected clipboard, show the user
         if self.db_manager.current_clipboard == clipboard_id:
-            label.setStyleSheet("""QLabel {border: 1px solid #ffaa00;} QLabel:hover {border: 2px solid #ffaa00;}""")
+            label.setStyleSheet(
+                'QLabel {border: 1px solid #ffaa00;}'
+                'QLabel:hover {border: 2px solid #ffaa00;}'
+            )
 
         # On click
         label_click = self.LabelClick(clipboard_id, self, label)
@@ -215,7 +218,7 @@ class ClipboardSelector(QtWidgets.QWidget):
             self.parent = parent
 
             self.setWindowFlags(QtCore.Qt.FramelessWindowHint | QtCore.Qt.WindowStaysOnTopHint)
-            self.setStyleSheet("QWidget {color: #b1b1b1; background-color: #323232; border: 0px;}")
+            self.setStyleSheet('QWidget {color: #b1b1b1; background-color: #323232; border: 0px;}')
             self.setWindowOpacity(1)
 
             self.grid_layout = QtWidgets.QGridLayout()
@@ -242,7 +245,7 @@ class ClipboardSelector(QtWidgets.QWidget):
             self.opacity_spin.setFixedSize(self.SETTINGS_TILE_SIZE, self.SETTINGS_TILE_SIZE)
             self.opacity_spin.setMaximum(100)
             self.opacity_spin.setMinimum(0)
-            self.opacity_spin.setStyleSheet("QSpinBox {border: 1px solid #ffffff; font: 16pt; color: white;}")
+            self.opacity_spin.setStyleSheet('QSpinBox {border: 1px solid #ffffff; font: 16pt; color: white;}')
             self.opacity_spin.valueChanged.connect(self.opacity_edit)
             self.grid_layout.addWidget(self.opacity_spin, 0, 3)
 
@@ -257,7 +260,10 @@ class ClipboardSelector(QtWidgets.QWidget):
             self.close_label = QtWidgets.QLabel()
             self.close_label.setFixedSize(self.SETTINGS_TILE_SIZE, self.SETTINGS_TILE_SIZE)
             self.close_label.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-            self.close_label.setStyleSheet("QLabel {border: 1px solid #ffffff; font: 8pt; color: white;} QLabel:hover {border: 2px solid #ffaa00; color: #ffaa00;}")
+            self.close_label.setStyleSheet(
+                'QLabel {border: 1px solid #ffffff; font: 8pt; color: white;}'
+                'QLabel:hover {border: 2px solid #ffaa00; color: #ffaa00;}'
+            )
             self.close_label.setPixmap(icon)
             self.close_label.setAlignment(QtCore.Qt.AlignCenter)
             self.close_label.mousePressEvent = self.close_button_click
