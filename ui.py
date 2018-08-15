@@ -2,6 +2,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import sys
 import clipboard
 import utils
+import listener
 
 GRID_SPACING = 6
 CLIPBOARD_LABEL_SIZE = 130
@@ -222,7 +223,7 @@ class ClipboardSelector(QtWidgets.QWidget):
             self.grid_layout.setSpacing(self.SETTINGS_GRID_SPACING)
             self.grid_layout.setContentsMargins(self.SETTINGS_GRID_SPACING, self.SETTINGS_GRID_SPACING, self.SETTINGS_GRID_SPACING, self.SETTINGS_GRID_SPACING)
 
-            items = 5 # Manually set how many buttons/inputs we will have
+            items = 7 # Manually set how many buttons/inputs we will have
             self.setFixedSize(
                 (items * (self.SETTINGS_GRID_SPACING + self.SETTINGS_TILE_SIZE)) + self.SETTINGS_GRID_SPACING,
                 self.SETTINGS_TILE_SIZE + (2 * self.SETTINGS_GRID_SPACING)
@@ -245,6 +246,12 @@ class ClipboardSelector(QtWidgets.QWidget):
             self.opacity_spin.valueChanged.connect(self.opacity_edit)
             self.grid_layout.addWidget(self.opacity_spin, 0, 3)
 
+            self.toggle_listener_button = self.create_basic_button('Toggle Listener', self.toggle_listener_button_click)
+            self.grid_layout.addWidget(self.toggle_listener_button, 0, 4)
+
+            self.toggle_listener_auto_start_button = self.create_basic_button('Listener Autostart', self.toggle_listener_auto_start_button_click)
+            self.grid_layout.addWidget(self.toggle_listener_auto_start_button, 0, 5)
+
             icon = QtGui.QPixmap('images/close.png')
             icon = icon.scaled(self.SETTINGS_TILE_SIZE, self.SETTINGS_TILE_SIZE, QtCore.Qt.KeepAspectRatio)
             self.close_label = QtWidgets.QLabel()
@@ -254,7 +261,7 @@ class ClipboardSelector(QtWidgets.QWidget):
             self.close_label.setPixmap(icon)
             self.close_label.setAlignment(QtCore.Qt.AlignCenter)
             self.close_label.mousePressEvent = self.close_button_click
-            self.grid_layout.addWidget(self.close_label, 0, 4)
+            self.grid_layout.addWidget(self.close_label, 0, 6)
 
             self.position_above_parent()
             self.set_values()
@@ -287,6 +294,8 @@ class ClipboardSelector(QtWidgets.QWidget):
                 [self.parent.db_manager.close_on_select, self.close_on_select_button],
                 [self.parent.db_manager.stay_on_top, self.stay_on_top_button],
                 [self.parent.db_manager.disable_frame, self.disable_frame_button],
+                [listener.is_listener_running(), self.toggle_listener_button],
+                [listener.is_listener_auto_start(), self.toggle_listener_auto_start_button],
             ]
 
             for pair in settings_label_pairs:
@@ -316,6 +325,12 @@ class ClipboardSelector(QtWidgets.QWidget):
         def opacity_edit(self, e):
             self.parent.db_manager.opacity = self.opacity_spin.value() / 100
             self.set_values()
+
+        def toggle_listener_button_click(self, e):
+            pass
+
+        def toggle_listener_auto_start_button_click(self, e):
+            pass
 
         def close_button_click(self, e):
             if e.button() == 1:

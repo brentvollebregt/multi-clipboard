@@ -15,7 +15,19 @@ def stop_listener():
 
 def is_listener_running():
     # Return a bool of whether the listener is currently running
+    return False # TODO Return true if server is running
+
+
+def setup_listener_auto_start():
     pass
+
+
+def remove_listener_auto_start():
+    pass
+
+
+def is_listener_auto_start():
+    return False # TODO Return true if file is found for autostart
 
 
 class Listener:

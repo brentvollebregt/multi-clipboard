@@ -46,6 +46,8 @@ To run the GUI, simply run the ```multi_clipboard.py``` script with no parameter
 * [Michael Robertson](https://github.com/MBRobertson) for adding file support in previous versions.
 
 ## Things that still are being done
+ - Comment and label methods
+ - Put tool tips on buttons
  - Add new image to README
  - Add listener running on a server to wait for [Ctrl + Windows + C]
      - Add notes to readme for starting and stopping (--start-listener)
