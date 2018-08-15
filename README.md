@@ -38,6 +38,7 @@ To run the GUI, simply run the ```multi_clipboard.py``` script with no parameter
 * `clipboards.py -c 1` - Delete clipboard 1
 * `clipboards.py --start-listener` - Starts the listener if it isn't running
 * `clipboards.py --stop-listener` - Stops the listener if it's running
+* `clipboards.py --current` - Check what clipboard you are currently on
 
 ## The Listener
 This package has a built in listener which listens for Ctrl + Windows + C (Left control). This can be enabled in the GUI's settings under "Toggle Listener" or by arguments as described above. This also comes with a feature to make the listener start on startup. To enable this, go into the GUI's settings and click "Listener Autostart" to toggle it on/off.
@@ -55,7 +56,6 @@ This package has a built in listener which listens for Ctrl + Windows + C (Left 
 * [Michael Robertson](https://github.com/MBRobertson) for adding file support in previous versions.
 
 ## Things that still are being done
- - Messages back in argument passing (print)
  - Put tool tips on buttons
  - Convert to package format
     - Add setup.py
