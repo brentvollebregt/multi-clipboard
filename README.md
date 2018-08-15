@@ -56,7 +56,6 @@ This package has a built in listener which listens for Ctrl + Windows + C (Left 
 * [Michael Robertson](https://github.com/MBRobertson) for adding file support in previous versions.
 
 ## Things that still are being done
- - Put tool tips on buttons
  - Convert to package format
     - Add setup.py
     - License

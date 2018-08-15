@@ -141,12 +141,12 @@ class ClipboardSelector(QtWidgets.QWidget):
         # Size of each label with spacing considered
         label_size = (CLIPBOARD_LABEL_SIZE - BUTTONS_SPACING) / 2
 
-        # Data to setup buttons to stop repeating lines [img, onclick, row, col]
+        # Data to setup buttons to stop repeating lines [img, onclick, row, col, tooltip]
         button_data = [
-            [IMAGES_FOLDER + '\\add.png', self.add_button, 0, 0],
-            [IMAGES_FOLDER + '\\settings.png', self.settings_button, 0, 1],
-            [IMAGES_FOLDER + '\\delete.png', self.clear_button, 1, 0],
-            [IMAGES_FOLDER + '\\close.png', self.close_button, 1, 1]
+            [IMAGES_FOLDER + '\\add.png', self.add_button, 0, 0, 'Add a new empty clipboard'],
+            [IMAGES_FOLDER + '\\settings.png', self.settings_button, 0, 1, 'Open the settings'],
+            [IMAGES_FOLDER + '\\delete.png', self.clear_button, 1, 0, 'Delete all clipboards'],
+            [IMAGES_FOLDER + '\\close.png', self.close_button, 1, 1, 'Close this window']
         ]
 
         # Setup each button with data provided above
@@ -158,6 +158,7 @@ class ClipboardSelector(QtWidgets.QWidget):
             icon = icon.scaled(label_size - BUTTON_IMAGE_SIZE_REDUCTION, label_size - BUTTON_IMAGE_SIZE_REDUCTION, QtCore.Qt.KeepAspectRatio)
             tmp_btn.setPixmap(icon)
             tmp_btn.setAlignment(QtCore.Qt.AlignCenter)
+            tmp_btn.setToolTip(button[4])
             tmp_btn.mousePressEvent = button[1]
             layout.addWidget(tmp_btn, button[2], button[3])
 
@@ -250,7 +251,12 @@ class ClipboardSelector(QtWidgets.QWidget):
             self.grid_layout = QtWidgets.QGridLayout()
             self.setLayout(self.grid_layout)
             self.grid_layout.setSpacing(self.SETTINGS_GRID_SPACING)
-            self.grid_layout.setContentsMargins(self.SETTINGS_GRID_SPACING, self.SETTINGS_GRID_SPACING, self.SETTINGS_GRID_SPACING, self.SETTINGS_GRID_SPACING)
+            self.grid_layout.setContentsMargins(
+                self.SETTINGS_GRID_SPACING,
+                self.SETTINGS_GRID_SPACING,
+                self.SETTINGS_GRID_SPACING,
+                self.SETTINGS_GRID_SPACING
+            )
 
             # Calculate window size based off **static** value of how many buttons/inputs we will have
             items = 7
@@ -260,13 +266,25 @@ class ClipboardSelector(QtWidgets.QWidget):
             )
 
             # Setup general toggle buttons
-            self.close_on_select_button = self.create_basic_button('Close on Select', self.close_on_select_button_click)
+            self.close_on_select_button = self.create_basic_button(
+                'Close on Select',
+                self.close_on_select_button_click,
+                'Close the widow when a clipboard is selected'
+            )
             self.grid_layout.addWidget(self.close_on_select_button, 0, 0)
 
-            self.stay_on_top_button = self.create_basic_button('Stay on Top', self.stay_on_top_button_click)
+            self.stay_on_top_button = self.create_basic_button(
+                'Stay on Top',
+                self.stay_on_top_button_click,
+                'Keep the window on top of all windows'
+            )
             self.grid_layout.addWidget(self.stay_on_top_button, 0, 1)
 
-            self.disable_frame_button = self.create_basic_button('Disable Frame', self.disable_frame_button_click)
+            self.disable_frame_button = self.create_basic_button(
+                'Disable Frame',
+                self.disable_frame_button_click,
+                'Disable the frame around the window\n(includes the minimise and close button)'
+            )
             self.grid_layout.addWidget(self.disable_frame_button, 0, 2)
 
             # Setup opacity QSpinBox
@@ -275,14 +293,23 @@ class ClipboardSelector(QtWidgets.QWidget):
             self.opacity_spin.setMaximum(100)
             self.opacity_spin.setMinimum(0)
             self.opacity_spin.setStyleSheet('QSpinBox {border: 1px solid #ffffff; font: 16pt; color: white;}')
+            self.opacity_spin.setToolTip('Set the opacity of the main window')
             self.opacity_spin.valueChanged.connect(self.opacity_edit)
             self.grid_layout.addWidget(self.opacity_spin, 0, 3)
 
             # Setup listener toggle buttons
-            self.toggle_listener_button = self.create_basic_button('Toggle Listener', self.toggle_listener_button_click)
+            self.toggle_listener_button = self.create_basic_button(
+                'Toggle Listener',
+                self.toggle_listener_button_click,
+                'Turn the listener on/off\nPress Ctrl + Windows + C to open multi clipboard when on'
+            )
             self.grid_layout.addWidget(self.toggle_listener_button, 0, 4)
 
-            self.toggle_listener_auto_start_button = self.create_basic_button('Listener Autostart', self.toggle_listener_auto_start_button_click)
+            self.toggle_listener_auto_start_button = self.create_basic_button(
+                'Listener Autostart',
+                self.toggle_listener_auto_start_button_click,
+                'Put a file in the startup folder to start the listener on startup'
+            )
             self.grid_layout.addWidget(self.toggle_listener_auto_start_button, 0, 5)
 
             # Setup close button
@@ -297,13 +324,14 @@ class ClipboardSelector(QtWidgets.QWidget):
             )
             self.close_label.setPixmap(icon)
             self.close_label.setAlignment(QtCore.Qt.AlignCenter)
+            self.close_label.setToolTip('Close settings')
             self.close_label.mousePressEvent = self.close_button_click
             self.grid_layout.addWidget(self.close_label, 0, 6)
 
             self.position_above_parent()
             self.set_values()
 
-        def create_basic_button(self, text, onclick):
+        def create_basic_button(self, text, onclick, tooltip):
             """ Create a basic settings button with text and a onclick method """
             tmp_btn = QtWidgets.QLabel()
             tmp_btn.setFixedSize(self.SETTINGS_TILE_SIZE, self.SETTINGS_TILE_SIZE)
@@ -313,6 +341,7 @@ class ClipboardSelector(QtWidgets.QWidget):
             tmp_btn.setMargin(3)
             tmp_btn.setAlignment(QtCore.Qt.AlignCenter)
             tmp_btn.mousePressEvent = onclick
+            tmp_btn.setToolTip(tooltip)
             return tmp_btn
 
         def position_above_parent(self):
