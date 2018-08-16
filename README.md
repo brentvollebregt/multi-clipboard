@@ -18,6 +18,19 @@ This is my solution to constantly overwriting my clipboard. It is a GUI that act
 
 ### Installation and Usage
 
+#### Installing Via [PyPi](https://pypi.org/project/multi-clipboard/)
+To install the package from PyPI, execute:
+
+```
+python -m pip install multi-clipboard
+```
+
+Now you can run the project anywhere using:
+
+```
+> multi-clipboard
+```
+
 #### Installing Via the [Repository](https://github.com/brentvollebregt/multi-clipboard)
 You can install this project using this repository by following these steps:
 1. Clone/download the [repository](https://github.com/brentvollebregt/multi-clipboard)
@@ -36,19 +49,6 @@ Don't want to have to install the package? Follow these steps:
 2. Open cmd/terminal and cd into multi-clipboard using ```cd multi-clipboard```
 3. Install requirements using ```python -m pip install -r requirements.txt``` and [install this if pywin32 doesn't install](https://github.com/mhammond/pywin32/releases)
 4. Run the project using ```python -m multi_clipboard```
-
-#### Installing Via [PyPi](https://pypi.org/project/multi-clipboard/)
-To install the package from PyPI, execute:
-
-```
-python -m pip install multi-clipboard
-```
-
-Now you can run the project anywhere using:
-
-```
-> multi-clipboard
-```
 
 ### GUI Usage
 * Click on clipboard to switch to it (will close automatically on selection by default)
