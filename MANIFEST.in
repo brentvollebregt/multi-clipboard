@@ -1,0 +1,6 @@
+include README.md
+include LICENSE
+include multi_clipboard/images/add.png
+include multi_clipboard/images/close.png
+include multi_clipboard/images/delete.png
+include multi_clipboard/images/settings.png

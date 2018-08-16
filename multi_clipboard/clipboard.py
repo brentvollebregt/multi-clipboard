@@ -1,6 +1,6 @@
 import io
 import win32clipboard
-from PIL import ImageGrab, Image
+from PIL import ImageGrab
 
 CF_IMAGES = win32clipboard.CF_DIBV5
 CF_FILES = 49376

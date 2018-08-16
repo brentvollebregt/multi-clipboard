@@ -1,8 +1,8 @@
+from . import clipboard
+from . import utils
+from . import listener
 from PyQt5 import QtCore, QtGui, QtWidgets
 import sys
-import clipboard
-import utils
-import listener
 import os
 
 
@@ -427,7 +427,7 @@ def show_clipboard_selector(db_manager):
     """ Open the main GUI application """
     app = QtWidgets.QApplication(sys.argv)
     cs = ClipboardSelector(db_manager)
-    sys.exit(app.exec_())
+    app.exec_()
 
 
 def show_unsupported_clipboard_warning():
@@ -444,4 +444,4 @@ def show_unsupported_clipboard_warning():
     msg.show()
     msg.raise_()
     msg.activateWindow()
-    sys.exit(app.exec_())
+    app.exec_()

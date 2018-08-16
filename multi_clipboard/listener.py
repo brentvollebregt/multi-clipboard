@@ -1,10 +1,11 @@
+from .db import DatabaseManager
+from . import utils
+from . import ui
 import os
 from pynput import keyboard
 import socket
 import threading
-from db import DatabaseManager
-import utils
-import ui
+import sys
 
 
 # Startup file statics
@@ -148,6 +149,7 @@ class ListenerThread(threading.Thread):
         db_manager = DatabaseManager()
         utils.store_clipboard(db_manager)
         ui.show_clipboard_selector(db_manager)
+        sys.exit()
 
 
 if __name__ == "__main__":

@@ -1,6 +1,7 @@
-import clipboard
+from . import clipboard
+from . import ui
 import argparse
-import ui
+import sys
 
 
 def check_clear_arg(value):
@@ -34,6 +35,7 @@ def store_clipboard(db_manager):
     if user_clipboard_type is None:
         # If we can't support this clipboard, show an error (will stop after dialog closed)
         ui.show_unsupported_clipboard_warning()
+        sys.exit()
     user_clipboard_contents = clipboard.get_clipboard()
     user_clipboard_preview = clipboard.get_clipboard_preview()
     current_clipboard_id = db_manager.current_clipboard
