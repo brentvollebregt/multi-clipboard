@@ -26,7 +26,7 @@ python -m pip install multi-clipboard
 Now you can run the project anywhere using:
 
 ```
-> multi-clipboard
+multi-clipboard
 ```
 
 #### Installing Via the [Repository](https://github.com/brentvollebregt/multi-clipboard)
