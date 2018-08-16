@@ -1,2 +1,5 @@
 .idea/
-*sqlite
+clipboards.sqlite
+build
+dist
+*.egg-info/

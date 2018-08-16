@@ -13,7 +13,7 @@ This is my solution to constantly overwriting my clipboard. It is a GUI that act
 ## Getting Started
 
 ### Prerequisites
- - Python (tested on 3.4+)
+ - Python >= 3.5
  - Windows
 
 ### Installation and Usage
@@ -27,13 +27,7 @@ You can install this project using this repository by following these steps:
 Now you can run the project anywhere using:
 
 ```
-> python -m multi_clipboard
-```
-
-or simply calling the entry-point:
-
-```
-> multi-clipboard
+multi-clipboard
 ```
 
 #### Running the Package From [Source](https://github.com/brentvollebregt/auto-py-to-exe/archive/master.zip)
@@ -43,8 +37,18 @@ Don't want to have to install the package? Follow these steps:
 3. Install requirements using ```python -m pip install -r requirements.txt``` and [install this if pywin32 doesn't install](https://github.com/mhammond/pywin32/releases)
 4. Run the project using ```python -m multi_clipboard```
 
-#### Installing Via PyPi
-*Currently this package is not on PyPi*
+#### Installing Via [PyPi](https://pypi.org/project/multi-clipboard/)
+To install the package from PyPI, execute:
+
+```
+python -m pip install multi-clipboard
+```
+
+Now you can run the project anywhere using:
+
+```
+> multi-clipboard
+```
 
 ### GUI Usage
 * Click on clipboard to switch to it (will close automatically on selection by default)
@@ -75,7 +79,7 @@ This package has a built in listener which listens for Ctrl + Windows + C (Left 
  - I am shown an error saying my clipboard isn't supported? -> Open up an issue with details on what your clipboard contents are, we can see if it can be supported
 
 ## Running From Your Project
-If you want to run the GUI from python, first install the package. Now you can import it and use it:
+If you want to run the GUI from python, first install the package, you can import it and use it:
 ```python
 from multi_clipboard import db, ui
 db_manager = db.DatabaseManager()
@@ -84,6 +88,3 @@ ui.show_clipboard_selector(db_manager)
 
 ## Thanks to
 * [Michael Robertson](https://github.com/MBRobertson) for adding file support in previous versions.
-
-## Things that still are being done
-- PyPI
