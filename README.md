@@ -5,8 +5,6 @@ The idea of this is to easily switch clipboards with a simple click in a GUI. It
 
 ![Main GUI](https://nitratine.net/images/multi-clipboard/main-gui.png)
 
-### GUI With Settings Open
-
 ## What Is This?
 This is my solution to constantly overwriting my clipboard. It is a GUI that acts like a hotbar, click on a virtual clipboard to place it on your actual clipboard. Some command line support has also been added in the form of setting and clearing clipboards.
 
