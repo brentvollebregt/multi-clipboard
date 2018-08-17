@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='multi-clipboard',
-    version='1.0.0',
+    version='1.0.2',
     url='https://github.com/brentvollebregt/mutli-clipboard',
     license='MIT',
     author='Brent Vollebregt',
@@ -15,12 +15,13 @@ setup(
     packages=['multi_clipboard'],
     include_package_data=True,
     install_requires=['pywin32', 'PyQt5', 'Pillow', 'pynput'],
-    python_requires='>=2.7,!=3.7.*',
+    python_requires='>=3.5',
     classifiers=[
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
         'Operating System :: Microsoft :: Windows',
     ],
     entry_points={
