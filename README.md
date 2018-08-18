@@ -50,10 +50,14 @@ Don't want to have to install the package? Follow these steps:
 
 ### GUI Usage
 * Click on clipboard to switch to it (will close automatically on selection by default)
+    - You can also use TAB to highlight the clipboards and then press ENTER to set the currently selected keyboard
 * Right click menu on each clipboard to individually delete/set
 * Click on the trash to delete all clipboards
 * Click on the plus button to create a new clipboard
-* Settings for the GUI can be toggled easily in settings window
+* Settings for the GUI can be toggled easily in settings window. In here you can:
+    - Change window settings (opacity, frame, stay on top...)
+    - Toggle the listener
+    - Make the listener start on user login
 
 ### Command Line Usage
 * `multi-clipboard` - Opens GUI

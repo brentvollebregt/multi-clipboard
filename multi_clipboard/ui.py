@@ -20,6 +20,9 @@ SETTINGS_DISTANCE_ABOVE_PARENT = 5
 class ClipboardSelector(QtWidgets.QWidget):
     """ The main window for the clipboard selection GUI"""
 
+    focus_enabled = False
+    current_focus = None
+
     def __init__(self, db_mgr):
         super().__init__()
         self.db_manager = db_mgr
@@ -40,6 +43,7 @@ class ClipboardSelector(QtWidgets.QWidget):
             'QWidget:item:selected { background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #ffa02f, stop: 1 #d7801a); }'
             'QLabel { border: 1px solid #b1b1b1; }'
             'QLabel:hover { border: 2px solid #ffaa00; }'
+            'QLabel:focus { border: 2px solid #ffaa00; }'
         )
         self.setWindowOpacity(self.db_manager.opacity)
 
@@ -122,6 +126,7 @@ class ClipboardSelector(QtWidgets.QWidget):
             label.setStyleSheet(
                 'QLabel {border: 1px solid #ffaa00;}'
                 'QLabel:hover {border: 2px solid #ffaa00;}'
+                'QLabel:focus {border: 2px solid #ffaa00;}'
             )
 
         # On click
@@ -197,6 +202,26 @@ class ClipboardSelector(QtWidgets.QWidget):
         """ Event for the settings button """
         settings_window = self.SettingsWindow(self)
         settings_window.show()
+
+    def keyPressEvent(self, event):
+        """ Detecting keypress events globally to setup tab selection"""
+        # If tab has been pressed and the tab selections havent been setup
+        if event.key() == QtCore.Qt.Key_Tab and not self.focus_enabled:
+            self.focus_enabled = True
+            child_count = self.grid_layout.count()
+            # Set all clipboards focus policies
+            for child_index in range(child_count):
+                if self.grid_layout.itemAt(child_index).widget() is not None:
+                    self.grid_layout.itemAt(child_index).widget().setFocusPolicy(QtCore.Qt.StrongFocus)
+            # Set the focus to the first clipboard
+            self.grid_layout.itemAt(0).widget().setFocus()
+
+        # If enter is pressed and we have setup tab selection
+        elif event.key() in [QtCore.Qt.Key_Enter, QtCore.Qt.Key_Return] and self.focus_enabled:
+            # Send a left click event to the currently focused widget
+            event = QtCore.QEvent(QtCore.QEvent.MouseButtonPress)
+            event.button = lambda: 1
+            self.focusWidget().mousePressEvent(event)
 
     class LabelClick:
         """ Handler for left and right clicks on a label """
