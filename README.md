@@ -71,18 +71,11 @@ This package has a built in listener which listens for Ctrl + Windows + C (Left 
 
 ![Main GUI with Settings](https://nitratine.net/images/multi-clipboard/main-gui-with-settings-shown.png)
 
-## So What Happens If...
- - I delete all clipboards? -> Clipboard 0 will be created with the current contents
- - I delete the clipboard I am currently on? -> Nothing, your clipboard will be saved back to that clipboard later.
- - I am shown an error saying my clipboard isn't supported? -> Open up an issue with details on what your clipboard contents are, we can see if it can be supported
-
-## Running From Your Project
-If you want to run the GUI from python, first install the package, you can import it and use it:
-```python
-from multi_clipboard import db, ui
-db_manager = db.DatabaseManager()
-ui.show_clipboard_selector(db_manager)
-```
-
 ## Thanks to
 * [Michael Robertson](https://github.com/MBRobertson) for adding file support in previous versions.
+
+## Improvements That Can Be Made
+- [ ] Save all the current sub-clipboards in a table for each virtual clipboard
+    - One table references the clipboards table which also has preview in it
+    - n many tables for each clipboard containing [type, content]. Will need to be re-constructed to correct formats when assigning e.g. bytes, string, tuple.
+- [ ] Generate an executable

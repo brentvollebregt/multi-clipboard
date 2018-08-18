@@ -1,5 +1,5 @@
-from . import clipboard
-from . import ui
+from multi_clipboard import clipboard
+from multi_clipboard import ui
 import argparse
 import sys
 

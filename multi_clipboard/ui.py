@@ -1,6 +1,6 @@
-from . import clipboard
-from . import utils
-from . import listener
+from multi_clipboard import clipboard
+from multi_clipboard import utils
+from multi_clipboard import listener
 from PyQt5 import QtCore, QtGui, QtWidgets
 import sys
 import os

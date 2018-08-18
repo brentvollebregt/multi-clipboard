@@ -1,9 +1,8 @@
-from .db import DatabaseManager
-from . import ui
-from . import listener
-from . import utils
+from multi_clipboard.db import DatabaseManager
+from multi_clipboard import ui
+from multi_clipboard import listener
+from multi_clipboard import utils
 import argparse
-import sys
 
 
 def run():
@@ -22,7 +21,6 @@ def run():
     if args.clear is None and args.set is None and not args.start_listener and not args.stop_listener and not args.current:
         # If there were no arguments passed, open the UI
         ui.show_clipboard_selector(db_manager)
-        sys.exit()
 
     if args.set is not None:
         stored_clipboard_data = db_manager.get_clipboard(args.set)
@@ -74,6 +72,17 @@ def run():
     if args.current:
         # Show the user what clipboard they are currently on
         print('Currently you are on clipboard ' + str(db_manager.current_clipboard))
+
+    # If the listener is running, wait for a call to open the GUI
+    while listener.is_listener_running() or args.start_listener:
+        args.start_listener = False # Compensate for next loop
+        listener.openGUIEvent.wait()
+        # When the event is set, check if it was to open the GUI
+        if listener.openGUIEvent.openGUI:
+            utils.store_clipboard(db_manager)
+            ui.show_clipboard_selector(db_manager)
+        listener.openGUIEvent.openGUI = False
+        listener.openGUIEvent.clear()
 
 
 if __name__ == '__main__':

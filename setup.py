@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='multi-clipboard',
-    version='1.0.2',
+    version='1.1.0',
     url='https://github.com/brentvollebregt/mutli-clipboard',
     license='MIT',
     author='Brent Vollebregt',

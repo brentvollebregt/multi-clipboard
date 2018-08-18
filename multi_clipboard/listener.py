@@ -1,11 +1,7 @@
-from .db import DatabaseManager
-from . import utils
-from . import ui
 import os
 from pynput import keyboard
 import socket
 import threading
-import sys
 
 
 # Startup file statics
@@ -24,6 +20,10 @@ SERVER_ARE_YOU_RUNNING = b'Running?'
 SERVER_YES = b'Yes'
 SERVER_STOP = b'Stop'
 SERVER_LOCK_FILE = os.path.dirname(os.path.realpath(__file__)) + '\.server_lock'
+
+# Setup calls for the MainThread to catch to keep the GUI in the MainThread
+openGUIEvent = threading.Event()
+openGUIEvent.openGUI = False
 
 
 def start_listener():
@@ -47,10 +47,13 @@ def is_listener_running():
     """ Check if the listener is running, returns a bool"""
     if os.path.isfile(SERVER_LOCK_FILE):
         # If file exists, get the port
-        f = open(SERVER_LOCK_FILE, 'r')
-        port = int(f.readline())
-        f.close()
-        server = ('127.0.0.1', port)
+        try:
+            f = open(SERVER_LOCK_FILE, 'r')
+            port = int(f.readline())
+            f.close()
+            server = ('127.0.0.1', port)
+        except PermissionError:
+            return False
 
         # Send packet and then wait for reply
         client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -118,6 +121,10 @@ class ListenerThread(threading.Thread):
                 os.remove(SERVER_LOCK_FILE)
                 break
 
+        # Call the GUI event with openGUI = False, will end the loop
+        openGUIEvent.openGUI = False
+        openGUIEvent.set()
+
     def listen(self):
         """ Start a listener and join it to this thread """
         with keyboard.Listener(on_press=self.on_press, on_release=self.on_release) as self.listener:
@@ -133,24 +140,14 @@ class ListenerThread(threading.Thread):
                     if thread.getName() == 'GUI_Thread' and thread.is_alive():
                         break
                 else:
-                    # Thread the GUI so it doesn't block
-                    ui_thread = threading.Thread(target=self.start_multi_clipboard)
-                    ui_thread.setDaemon(False)
-                    ui_thread.setName('GUI_Thread')
-                    ui_thread.start()
+                    # Call GUI in MainThread
+                    openGUIEvent.openGUI = True
+                    openGUIEvent.set()
 
     def on_release(self, key):
         """ When a key is released, remove it from the set remembering keys"""
         if key in LISTENER_COMBINATION and key in self.keys_pressed:
             self.keys_pressed.remove(key)
-
-    def start_multi_clipboard(self):
-        """ Start the main GUI when called with a new instance of db_manager """
-        db_manager = DatabaseManager()
-        utils.store_clipboard(db_manager)
-        ui.show_clipboard_selector(db_manager)
-        sys.exit()
-
 
 if __name__ == "__main__":
     if not is_listener_running():
