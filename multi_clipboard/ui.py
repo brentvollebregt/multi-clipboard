@@ -24,7 +24,7 @@ class ClipboardSelector(QtWidgets.QWidget):
     current_focus = None
 
     def __init__(self, db_mgr):
-        super().__init__()
+        super(ClipboardSelector, self).__init__()
         self.db_manager = db_mgr
 
         # Setup window: title, flags, stylesheet, opacity
@@ -200,7 +200,7 @@ class ClipboardSelector(QtWidgets.QWidget):
 
     def settings_button(self, event):
         """ Event for the settings button """
-        settings_window = self.SettingsWindow(self)
+        settings_window = ClipboardSelector.SettingsWindow(self)
         settings_window.show()
 
     def keyPressEvent(self, event):
@@ -264,7 +264,7 @@ class ClipboardSelector(QtWidgets.QWidget):
         SETTINGS_TILE_SIZE = 60
 
         def __init__(self, parent):
-            super().__init__()
+            super(ClipboardSelector.SettingsWindow, self).__init__()
             self.parent = parent
 
             # Setup settings window
