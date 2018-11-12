@@ -58,6 +58,11 @@ Don't want to have to install the package? Follow these steps:
     - Change window settings (opacity, frame, stay on top...)
     - Toggle the listener
     - Make the listener start on user login
+    
+### Opening the GUI With A Mouse Click
+To make using this tool a bit easier, I included the file `run-multi-clipboard.vbs` in the repository only. When double clicking on this file to run it, the GUI will open with no terminal appearing. 
+
+*The creation of this file has not been implemented in setup.py as I feel it would be intrusive.*
 
 ### Command Line Usage
 * `multi-clipboard` - Opens GUI
