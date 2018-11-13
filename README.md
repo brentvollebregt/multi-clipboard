@@ -60,9 +60,7 @@ Don't want to have to install the package? Follow these steps:
     - Make the listener start on user login
     
 ### Opening the GUI With A Mouse Click
-To make using this tool a bit easier, I included the file `run-multi-clipboard.vbs` in the repository only. When double clicking on this file to run it, the GUI will open with no terminal appearing. 
-
-*The creation of this file has not been implemented in setup.py as I feel it would be intrusive.*
+If you rather a double click opposed to typing `mutli-clipboard` in the terminal, open the project and then click the settings button. On the right you will see a button labeled "Create Shortcut"; clicking this will ask you where you want to save a shortcut script (VB script).
 
 ### Command Line Usage
 * `multi-clipboard` - Opens GUI

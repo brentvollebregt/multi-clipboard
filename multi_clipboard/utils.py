@@ -2,6 +2,9 @@ from multi_clipboard import clipboard
 from multi_clipboard import ui
 import argparse
 import sys
+from PyQt5.QtWidgets import QFileDialog
+import os
+from pathlib import Path
 
 
 def check_clear_arg(value):
@@ -11,7 +14,7 @@ def check_clear_arg(value):
     else:
         try:
             return int(value)
-        except:
+        except ValueError:
             raise argparse.ArgumentTypeError("%s is not an integer or '*'" % value)
 
 
@@ -53,3 +56,22 @@ def create_blank_clipboard(db_manager):
     """ Creates a new clipboard with an id of the current maximum id """
     _id = db_manager.get_next_clipboard_value()
     db_manager.set_clipboard(_id, clipboard.CF_PLAIN_TEXT, '', '')
+
+
+def create_shortcut(parent=None):
+    desktop = os.path.expanduser("~/Desktop")
+    options = QFileDialog.Options()
+    filename, _filter = QFileDialog.getSaveFileName(
+        parent,
+        "Select Directory",
+        desktop,
+        "Visual Basic (*.vbs)",
+        options=options
+    )
+    if filename != '':
+        project_directory = str(Path(__file__).parent.parent)
+        f = open(filename, 'w')
+        f.write('Set oShell = WScript.CreateObject ("WScript.Shell")\n')
+        f.write('oShell.CurrentDirectory = "' + project_directory + '"\n')
+        f.write('oShell.run "' + sys.executable + ' -m multi_clipboard", 0, True\n')
+        f.close()

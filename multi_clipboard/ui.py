@@ -284,7 +284,7 @@ class ClipboardSelector(QtWidgets.QWidget):
             )
 
             # Calculate window size based off **static** value of how many buttons/inputs we will have
-            items = 7
+            items = 8
             self.setFixedSize(
                 (items * (self.SETTINGS_GRID_SPACING + self.SETTINGS_TILE_SIZE)) + self.SETTINGS_GRID_SPACING,
                 self.SETTINGS_TILE_SIZE + (2 * self.SETTINGS_GRID_SPACING)
@@ -337,6 +337,18 @@ class ClipboardSelector(QtWidgets.QWidget):
             )
             self.grid_layout.addWidget(self.toggle_listener_auto_start_button, 0, 5)
 
+            # Setup Create Shortcut button
+            self.create_shortcut_button = self.create_basic_button(
+                'Create Shortcut',
+                self.create_shortcut,
+                'Create a VB Script that can be double clicked to run this project'
+            )
+            self.grid_layout.addWidget(self.create_shortcut_button, 0, 6)
+            self.create_shortcut_button.setStyleSheet(
+                'QLabel {border: 1px solid #ffffff; font: 8pt; color: white;}'
+                'QLabel:hover {border: 2px solid #ffaa00; color: #ffaa00;}'
+            )
+
             # Setup close button
             icon = QtGui.QPixmap(IMAGES_FOLDER + '\\close.png')
             icon = icon.scaled(self.SETTINGS_TILE_SIZE, self.SETTINGS_TILE_SIZE, QtCore.Qt.KeepAspectRatio)
@@ -351,7 +363,7 @@ class ClipboardSelector(QtWidgets.QWidget):
             self.close_label.setAlignment(QtCore.Qt.AlignCenter)
             self.close_label.setToolTip('Close settings')
             self.close_label.mousePressEvent = self.close_button_click
-            self.grid_layout.addWidget(self.close_label, 0, 6)
+            self.grid_layout.addWidget(self.close_label, 0, 7)
 
             self.position_above_parent()
             self.set_values()
@@ -441,6 +453,9 @@ class ClipboardSelector(QtWidgets.QWidget):
             else:
                 listener.setup_listener_auto_start()
             self.set_values()
+
+        def create_shortcut(self, e):
+            utils.create_shortcut(self)
 
         def close_button_click(self, e):
             """ Close the window when the close button is pressed """

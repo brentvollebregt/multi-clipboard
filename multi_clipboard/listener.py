@@ -93,6 +93,7 @@ class ListenerThread(threading.Thread):
     """ A listener thread for a key combination and a server to close the listener on command """
 
     keys_pressed = set()
+    listener = None
 
     def __init__(self):
         super(ListenerThread, self).__init__()
@@ -148,6 +149,7 @@ class ListenerThread(threading.Thread):
         """ When a key is released, remove it from the set remembering keys"""
         if key in LISTENER_COMBINATION and key in self.keys_pressed:
             self.keys_pressed.remove(key)
+
 
 if __name__ == "__main__":
     if not is_listener_running():
