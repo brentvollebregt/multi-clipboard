@@ -3,7 +3,7 @@ Switch clipboard contents using a simple GUI<br />
 Images, text, files and other formats are supported with unlimited amounts of saved clipboards able to be created.<br />
 The idea of this is to easily switch clipboards with a simple click in a GUI. It comes with a built in listener for Ctrl + Windows + C
 
-![Main GUI](https://nitratine.net/post-assets/multi-clipboard/main-gui.png)
+![Main GUI](https://nitratine.net/posts/multi-clipboard/main-gui.png)
 
 ## What Is This?
 This is my solution to constantly overwriting my clipboard. It is a GUI that acts like a hotbar, click on a virtual clipboard to place it on your actual clipboard. Some command line support has also been added in the form of setting and clearing clipboards.
@@ -76,7 +76,7 @@ This package has a built in listener which listens for Ctrl + Windows + C (Left 
 
 ## GUI With Settings Open
 
-![Main GUI with Settings](https://nitratine.net/post-assets/multi-clipboard/main-gui-with-settings-shown.png)
+![Main GUI with Settings](https://nitratine.net/posts/multi-clipboard/main-gui-with-settings-shown.png)
 
 ## Thanks to
 * [Michael Robertson](https://github.com/MBRobertson) for adding file support in previous versions.
